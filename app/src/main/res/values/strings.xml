@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Blog</string>
+    <string name="AppName">Post</string>
+    <string name="google_sign_in">Sign In with Google</string>
+    <string name="WebclientID">287227334723-gt9uac8rq89usb3ongbv1vof7f0od7cc.apps.googleusercontent.com</string>
+    <string name="app_navigation_buttons">App Navigation Buttons</string>
+    <string name="title">Title</string>
+    <string name="enter_blog_title">Enter Blog Title</string>
+    <string name="blog">Blog</string>
+    <string name="write_blog_here">Write Blog Here</string>
+    <string name="enter_your_tags">Enter Your Tags</string>
+    <string name="write_tags_here">Write Tags Here</string>
+    <string name="publish_blog">Publish Blog</string>
+</resources>
