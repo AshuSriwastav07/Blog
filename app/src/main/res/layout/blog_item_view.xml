@@ -28,14 +28,26 @@
                 android:layout_height="@dimen/dp_20"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/userBlogProfileImage"
+                <androidx.cardview.widget.CardView
                     android:layout_width="@dimen/dp_18"
                     android:layout_height="@dimen/dp_18"
                     android:layout_gravity="center"
-                    android:layout_margin="@dimen/dp_3"
+                    android:layout_margin="5dp"
                     android:layout_weight="0"
-                    app:srcCompat="@drawable/baseline_person_24" />
+                    app:cardCornerRadius="@dimen/dp_12"
+                    app:cardElevation="4dp">
+
+                    <ImageView
+                        android:id="@+id/userBlogProfileImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="3dp"
+                        android:layout_weight="0"
+                        android:scaleX="1.3"
+                        android:scaleY="1.3"
+                        tools:srcCompat="@tools:sample/avatars" />
+                </androidx.cardview.widget.CardView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -48,15 +60,23 @@
                         android:id="@+id/blogWriterName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="TextView" />
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/merriweather_sans_medium"
+                        android:gravity="center_vertical"
+                        android:text="TextView"
+                        android:textSize="@dimen/dp_6"
+                        tools:ignore="TextSizeCheck" />
 
                     <TextView
                         android:id="@+id/blogTage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:text="TextView" />
+                        android:layout_marginTop="2dp"
+                        android:fontFamily="@font/merriweather_sans_medium"
+                        android:gravity="center_vertical"
+                        android:text="TextView"
+                        android:textSize="@dimen/dp_5"
+                        tools:ignore="TextSizeCheck" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -65,26 +85,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/dp_3"
-                android:fontFamily="monospace"
+                android:fontFamily="@font/merriweather_sans_medium"
                 android:text="TextView"
-                android:textSize="@dimen/dp_8" />
+                android:textSize="@dimen/dp_7" />
 
             <TextView
                 android:id="@+id/blogItemDateTimeTextview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp_3"
-                android:fontFamily="monospace"
+                android:layout_marginStart="@dimen/dp_3"
+                android:layout_marginEnd="@dimen/dp_3"
+                android:layout_marginBottom="@dimen/dp_3"
+                android:fontFamily="@font/merriweather_sans_medium"
                 android:text="TextView"
-                android:textSize="@dimen/dp_6" />
+                android:textSize="@dimen/dp_5"
+                tools:ignore="TextSizeCheck" />
 
-            <ImageView
-                android:id="@+id/blogItemImageView"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_50"
-                android:layout_margin="@dimen/dp_5"
-                android:scaleX="2"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                android:layout_height="@dimen/dp_100"
+                android:layout_gravity="center"
+                android:layout_weight="0"
+                app:cardCornerRadius="@dimen/dp_5"
+                app:cardElevation="1dp">
+
+                <ImageView
+                    android:id="@+id/blogItemImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+
+                    android:scaleType="fitCenter"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
+            </androidx.cardview.widget.CardView>
+
+
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

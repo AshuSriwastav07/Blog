@@ -34,6 +34,8 @@ class WriteBlogPage : AppCompatActivity() {
         val userID = FirebaseAuth.getInstance().currentUser?.uid.toString()
         val userName = FirebaseAuth.getInstance().currentUser?.displayName.toString()
         val databaseRef = Firebase.firestore
+        val profilePictureUrl:String = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
+
 
         val TitleTextView: EditText = findViewById(R.id.BlogTitleEditText)
         val BodyTextView = findViewById<TextView>(R.id.BlogBodyEditText)
@@ -44,7 +46,7 @@ class WriteBlogPage : AppCompatActivity() {
         binding.publishBlogButton.setOnClickListener {
             progressBar.visibility=View.VISIBLE
 
-            Log.d("DataToStore", TitleTextView.text.toString())
+            Log.d("DataToStore",profilePictureUrl.toString())
 
             val title: String = TitleTextView.text.toString()
             val body: String = BodyTextView.text.toString()
@@ -58,6 +60,7 @@ class WriteBlogPage : AppCompatActivity() {
                 "userID" to userID,
                 "writerName" to userName,
                 "BlogDateAndTime" to currentDate,
+                "BlogUserProfileUrl" to profilePictureUrl
 
             )
 
@@ -84,8 +87,6 @@ class WriteBlogPage : AppCompatActivity() {
     private val resultLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) {
         imageUri = it
         binding.imageUploder.setImageURI(it)
-        binding.imageUploder.scaleY=2.0f
-
     }
 
     private fun UploadImage(blogData: HashMap<String, Any>) {

@@ -70,13 +70,15 @@ class MainActivity : AppCompatActivity() {
                         Log.d(TAG, "${document.id} => ${document.data}")
 
                         val dataModel = DataClass(
-                            BlogTitle = document.getString("title") ?: document.id,  //get data from document and add into given dataModel var
+                            //get data from document and add into given dataModel var
+                            BlogTitle = document.getString("title") ?: document.id,
                             BlogBody = document.getString("body") ?: "",
                             BlogTags = document.getString("tags") ?: "",
                             BlogUserID = document.getString("userID") ?: "",
                             BlogDateAndTime = document.getString("BlogDateAndTime") ?: "",
                             BlogImageURL = document.getString("BlogImageURL") ?: "",
-                            BlogWriterName = document.getString("writerName") ?:""
+                            BlogWriterName = document.getString("writerName") ?:"",
+                            BlogUserProfileUrl = document.getString("BlogUserProfileUrl") ?:""
 
                         )
                         BlogDataSet.add(dataModel) //Add data in ArrayList

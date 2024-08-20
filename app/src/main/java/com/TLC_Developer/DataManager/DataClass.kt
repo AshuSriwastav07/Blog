@@ -1,5 +1,7 @@
 package com.TLC_Developer.DataManager
 
+import com.google.firebase.storage.StorageReference
+
 class DataClass {
 
     lateinit var BlogTitle:String
@@ -9,9 +11,10 @@ class DataClass {
     lateinit var BlogWriterName:String
     lateinit var BlogDateAndTime:String
     lateinit var BlogImageURL:String
+    lateinit var BlogUserProfileUrl:String
 
 
-    constructor(BlogTitle:String,BlogTags:String,BlogBody:String,BlogUserID:String,BlogWriterName:String,BlogDateAndTime:String,BlogImageURL:String)
+    constructor(BlogTitle:String,BlogTags:String,BlogBody:String,BlogUserID:String,BlogWriterName:String,BlogDateAndTime:String,BlogImageURL:String,BlogUserProfileUrl: String)
     {
         this.BlogTitle=BlogTitle
         this.BlogTags=BlogTags
@@ -20,6 +23,7 @@ class DataClass {
         this.BlogWriterName=BlogWriterName
         this.BlogDateAndTime=BlogDateAndTime
         this.BlogImageURL=BlogImageURL
+        this.BlogUserProfileUrl=BlogUserProfileUrl
 
     }
 
