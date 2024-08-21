@@ -46,7 +46,7 @@ class WriteBlogPage : AppCompatActivity() {
         binding.publishBlogButton.setOnClickListener {
             progressBar.visibility=View.VISIBLE
 
-            Log.d("DataToStore",profilePictureUrl.toString())
+//            Log.d("DataToStore",profilePictureUrl.toString())
 
             val title: String = TitleTextView.text.toString()
             val body: String = BodyTextView.text.toString()

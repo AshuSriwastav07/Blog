@@ -11,17 +11,21 @@ import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.DataManager.BlogAdapter
 import com.TLC_Developer.DataManager.DataClass
 import com.TLC_Developer.Post.databinding.ActivityMainBinding
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
+import com.TLC_Developer.functions.function
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
-import com.google.firebase.firestore.firestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import java.text.ParseException
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val db = Firebase.firestore
     private lateinit var taskListener: ListenerRegistration
-    private var BlogDataSet:ArrayList<DataClass> = ArrayList()
+    private var BlogDataSet: ArrayList<DataClass> = ArrayList()
     private val TAG = "FireStoreData"
     private lateinit var blogRecyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: BlogAdapter
@@ -33,12 +37,15 @@ class MainActivity : AppCompatActivity() {
 
         ShowUserDetails()
 
-        binding.writeBlogButton.setOnClickListener{
-            val intent=Intent(this, WriteBlogPage::class.java)
+        binding.writeBlogButton.setOnClickListener {
+            val intent = Intent(this, WriteBlogPage::class.java)
             startActivity(intent)
-
         }
 
+        binding.profileButton.setOnClickListener {
+            val intent = Intent(this, UserProfilePageActivity::class.java)
+            startActivity(intent)
+        }
 
     }
 
@@ -46,7 +53,8 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         blogRecyclerView = findViewById(R.id.blogRecyclerView)
         val viewManager = LinearLayoutManager(this)
-        //Adapter Connect
+
+        // Adapter Connect
         recyclerViewAdapter = BlogAdapter(BlogDataSet)
         blogRecyclerView.apply {
             setHasFixedSize(true)
@@ -54,61 +62,45 @@ class MainActivity : AppCompatActivity() {
             adapter = recyclerViewAdapter
         }
 
-        //Get Data in DataModel Class and Store it
-
-        taskListener = db.collection("BlogsData")  //Get Tasks Data from FireStore
+        // Get Data in DataModel Class and Store it
+        taskListener = db.collection("BlogsData")  // Get Blogs Data from FireStore
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
                     Log.w(TAG, "Listen failed.", e)
                     return@addSnapshotListener
                 }
 
-                //Check fetch Data is null or not
                 if (snapshots != null) {
-                    BlogDataSet.clear()     //clear ArrayList
+                    BlogDataSet.clear()  // Clear ArrayList
                     for (document in snapshots) {
-                        Log.d(TAG, "${document.id} => ${document.data}")
+//                        Log.d(TAG, "${document.id} => ${document.data}")
 
                         val dataModel = DataClass(
-                            //get data from document and add into given dataModel var
-                            BlogTitle = document.getString("title") ?: document.id,
+                            BlogTitle = document.getString("title") ?:"",
                             BlogBody = document.getString("body") ?: "",
                             BlogTags = document.getString("tags") ?: "",
                             BlogUserID = document.getString("userID") ?: "",
                             BlogDateAndTime = document.getString("BlogDateAndTime") ?: "",
                             BlogImageURL = document.getString("BlogImageURL") ?: "",
-                            BlogWriterName = document.getString("writerName") ?:"",
-                            BlogUserProfileUrl = document.getString("BlogUserProfileUrl") ?:""
-
+                            BlogWriterName = document.getString("writerName") ?: "",
+                            BlogUserProfileUrl = document.getString("BlogUserProfileUrl") ?: ""
                         )
-                        BlogDataSet.add(dataModel) //Add data in ArrayList
-
+                        BlogDataSet.add(dataModel)  // Add data to ArrayList
                     }
+
+                    // Sort the blogs by date
+                    BlogDataSet.sortByDescending {
+                        function().convertStringToDate(it.BlogDateAndTime)?.time
+                    }
+
                     recyclerViewAdapter.notifyDataSetChanged()
                 } else {
                     Log.d(TAG, "Current data: null")
                 }
             }
-
-
-        getBlogData()
-
-
     }
 
 
-    private fun getBlogData(){
-        db.collection("BlogsData")
-            .get()
-            .addOnSuccessListener { documents ->
-                for(document in documents){
-                    Log.d("BlogDataRetrieve","${document.id} => ${document.data}")
-                }
-
-
-            }
-
-    }
 
     private fun ShowUserDetails() {
         val user = Firebase.auth.currentUser
@@ -127,21 +119,22 @@ class MainActivity : AppCompatActivity() {
             val executorService = Executors.newSingleThreadExecutor()
             executorService.execute {
                 try {
-                    val `in`=java.net.URL(imageURL).openStream()
-                    image=BitmapFactory.decodeStream(`in`)
-                }catch (e:Exception){
+                    val `in` = java.net.URL(imageURL).openStream()
+                    image = BitmapFactory.decodeStream(`in`)
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
-            runOnUiThread{
+            runOnUiThread {
                 try {
                     Thread.sleep(1000)
                     binding.userProfile.setImageBitmap(image)
-
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
             }
         }
     }
+
+
 }

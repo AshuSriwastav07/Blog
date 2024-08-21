@@ -11,23 +11,25 @@ import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.Post.R
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.ArrayList
+import java.util.Date
+import java.util.Locale
 
-class BlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
-    RecyclerView.Adapter<BlogAdapter.ViewHolder>() {
+class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
+    RecyclerView.Adapter<currentUserProfileBlogAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val blogTitle: TextView = view.findViewById(R.id.blogItemTitleTextview)
-        val blogDateAndTime: TextView = view.findViewById(R.id.blogItemDateTimeTextview)
-        val blogBgImageView: ImageView = view.findViewById(R.id.blogItemImageView)
-        val userProfileImage: ImageView = view.findViewById(R.id.userBlogProfileImage)
-        val userName: TextView = view.findViewById(R.id.blogWriterName)
-        val blogTags: TextView = view.findViewById(R.id.blogTage)
+        val userProfileImage: ImageView = view.findViewById(R.id.currentUser_userProfile)
+        val userName: TextView = view.findViewById(R.id.currentUser_UserName)
+        val blogTitle: TextView = view.findViewById(R.id.currentUser_ProfileBlogTitle)
+        val blogDateAndTime: TextView = view.findViewById(R.id.currentUser_ProfileBlogDateTime)
+        /*val blogBgImageView: ImageView = view.findViewById(R.id.blogItemImageView)
+        val blogTags: TextView = view.findViewById(R.id.blogTage)*/
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.blog_item_view, viewGroup, false)
+            .inflate(R.layout.blogitem_profile_version, viewGroup, false)
         return ViewHolder(view)
     }
 
@@ -35,11 +37,12 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
         val blog = blogDataSet[position]
         viewHolder.blogTitle.text = blog.BlogTitle
         viewHolder.userName.text = blog.BlogWriterName
-        viewHolder.blogTags.text = blog.BlogTags
+//        viewHolder.blogTags.text = blog.BlogTags
         stringToDate(blog.BlogDateAndTime, viewHolder)
-        Picasso.get().load(blog.BlogImageURL).into(viewHolder.blogBgImageView)
+//        Picasso.get().load(blog.BlogImageURL).into(viewHolder.blogBgImageView)
         Picasso.get().load(blog.BlogUserProfileUrl).into(viewHolder.userProfileImage)
     }
+
 
     override fun getItemCount(): Int {
         return blogDataSet.size
@@ -58,4 +61,3 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
         }
     }
 }
-

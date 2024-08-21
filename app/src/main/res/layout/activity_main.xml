@@ -30,9 +30,9 @@
                 android:layout_weight="1"
                 android:background="#C6C6C6"
                 android:fontFamily="@font/acme"
-                android:gravity="center"
+                android:gravity=""
+                android:paddingStart="@dimen/dp_5"
                 android:text="@string/AppName"
-                android:textAlignment="center"
                 android:textSize="@dimen/dp_12"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -72,7 +72,9 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_30"
-        android:layout_margin="@dimen/dp_8"
+        android:layout_marginLeft="@dimen/dp_4"
+        android:layout_marginRight="@dimen/dp_4"
+        android:layout_marginBottom="@dimen/dp_8"
         app:cardCornerRadius="@dimen/dp_8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,7 +96,7 @@
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/app_navigation_buttons"
                 android:elevation="@dimen/dp_3"
-                android:src="@drawable/baseline_home_24"/>
+                android:src="@drawable/baseline_home_24" />
 
             <ImageButton
                 android:id="@+id/writeBlogButton"
@@ -103,9 +105,9 @@
                 android:layout_margin="@dimen/dp_2"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/app_navigation_buttons"
                 android:elevation="@dimen/dp_3"
                 android:src="@drawable/baseline_edit_square_24"
-                android:contentDescription="@string/app_navigation_buttons"
 
                 />
 
@@ -116,9 +118,9 @@
                 android:layout_margin="@dimen/dp_2"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:contentDescription="@string/app_navigation_buttons"
                 android:elevation="@dimen/dp_3"
                 android:src="@drawable/baseline_person_24"
-                android:contentDescription="@string/app_navigation_buttons"
 
                 />
         </LinearLayout>

@@ -11,7 +11,9 @@
     <string name="enter_your_tags">Enter Your Tags</string>
     <string name="write_tags_here">Write Tags Here</string>
     <string name="publish_blog">Publish Blog</string>
-
+    <string name="scrollbar">scrollbar</string>
+    <string name="imageButtons">image Button</string>
+    <string name="socialmedia">socialMedia</string>
 
 
 </resources>
