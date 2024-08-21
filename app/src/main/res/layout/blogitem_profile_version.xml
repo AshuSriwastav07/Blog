@@ -41,7 +41,7 @@
                     android:textStyle="bold" />
 
                 <ImageButton
-                    android:id="@+id/imageView3"
+                    android:id="@+id/currentUser_BlogEditButton"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_12"
                     android:layout_marginStart="@dimen/dp_4"

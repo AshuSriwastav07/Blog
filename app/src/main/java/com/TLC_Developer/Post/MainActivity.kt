@@ -35,73 +35,80 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Show user details on the UI
         ShowUserDetails()
 
+        // Set up click listeners for buttons
         binding.writeBlogButton.setOnClickListener {
+            // Navigate to the WriteBlogPage activity when the button is clicked
             val intent = Intent(this, WriteBlogPage::class.java)
             startActivity(intent)
         }
 
         binding.profileButton.setOnClickListener {
+            // Navigate to the UserProfilePageActivity when the button is clicked
             val intent = Intent(this, UserProfilePageActivity::class.java)
             startActivity(intent)
         }
-
     }
 
     override fun onStart() {
         super.onStart()
+        // Initialize and set up the RecyclerView for displaying blog posts
         blogRecyclerView = findViewById(R.id.blogRecyclerView)
         val viewManager = LinearLayoutManager(this)
 
-        // Adapter Connect
+        // Create an adapter for the RecyclerView
         recyclerViewAdapter = BlogAdapter(BlogDataSet)
         blogRecyclerView.apply {
-            setHasFixedSize(true)
+            setHasFixedSize(true) // Optimize RecyclerView performance
             layoutManager = viewManager
             adapter = recyclerViewAdapter
         }
 
-        // Get Data in DataModel Class and Store it
-        taskListener = db.collection("BlogsData")  // Get Blogs Data from FireStore
+        // Listen for changes in the Firestore collection "BlogsData"
+        taskListener = db.collection("BlogsData")
             .addSnapshotListener { snapshots, e ->
                 if (e != null) {
+                    // Log an error if there is an issue with the snapshot listener
                     Log.w(TAG, "Listen failed.", e)
                     return@addSnapshotListener
                 }
 
                 if (snapshots != null) {
-                    BlogDataSet.clear()  // Clear ArrayList
+                    // Clear the existing blog data
+                    BlogDataSet.clear()
                     for (document in snapshots) {
-//                        Log.d(TAG, "${document.id} => ${document.data}")
-
+                        // Create a DataClass object for each blog document
                         val dataModel = DataClass(
-                            BlogTitle = document.getString("title") ?:"",
-                            BlogBody = document.getString("body") ?: "",
-                            BlogTags = document.getString("tags") ?: "",
-                            BlogUserID = document.getString("userID") ?: "",
-                            BlogDateAndTime = document.getString("BlogDateAndTime") ?: "",
-                            BlogImageURL = document.getString("BlogImageURL") ?: "",
-                            BlogWriterName = document.getString("writerName") ?: "",
-                            BlogUserProfileUrl = document.getString("BlogUserProfileUrl") ?: ""
+                            blogTitle = document.getString("title") ?: "",
+                            blogBody = document.getString("body") ?: "",
+                            blogTags = document.getString("tags") ?: "",
+                            blogUserID = document.getString("userID") ?: "",
+                            blogDateAndTime = document.getString("BlogDateAndTime") ?: "",
+                            blogImageURL = document.getString("BlogImageURL") ?: "",
+                            blogWriterName = document.getString("writerName") ?: "",
+                            blogUserProfileUrl = document.getString("BlogUserProfileUrl") ?: "",
+                            blogDocumentID = document.id
                         )
-                        BlogDataSet.add(dataModel)  // Add data to ArrayList
+                        BlogDataSet.add(dataModel) // Add the blog data to the ArrayList
                     }
 
-                    // Sort the blogs by date
+                    // Sort the blogs by date in descending order
                     BlogDataSet.sortByDescending {
                         function().convertStringToDate(it.BlogDateAndTime)?.time
                     }
 
+                    // Notify the adapter that the data has changed
                     recyclerViewAdapter.notifyDataSetChanged()
                 } else {
+                    // Log if no data is found
                     Log.d(TAG, "Current data: null")
                 }
             }
     }
 
-
-
+    // Function to display user details on the UI
     private fun ShowUserDetails() {
         val user = Firebase.auth.currentUser
         user?.let {
@@ -109,16 +116,14 @@ class MainActivity : AppCompatActivity() {
             val email = it.email
             val photoUrl = it.photoUrl
             val emailVerified = it.isEmailVerified
-//           binding.AppTitle.text = name
-//            binding.txtEmail.text = email
-//            if (emailVerified) {
-//                binding.txtStatus.text = "Verified Email"
-//            }
+
+            // Load the user's profile image
             var image: Bitmap? = null
             val imageURL = photoUrl.toString()
             val executorService = Executors.newSingleThreadExecutor()
             executorService.execute {
                 try {
+                    // Download and decode the image from the URL
                     val `in` = java.net.URL(imageURL).openStream()
                     image = BitmapFactory.decodeStream(`in`)
                 } catch (e: Exception) {
@@ -127,6 +132,7 @@ class MainActivity : AppCompatActivity() {
             }
             runOnUiThread {
                 try {
+                    // Wait for the image to be downloaded and then set it to the ImageView
                     Thread.sleep(1000)
                     binding.userProfile.setImageBitmap(image)
                 } catch (e: Exception) {
@@ -135,6 +141,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-
 }

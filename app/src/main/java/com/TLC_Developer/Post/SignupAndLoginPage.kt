@@ -25,7 +25,7 @@ import kotlinx.coroutines.tasks.await
 
 class SignupAndLoginPage : AppCompatActivity() {
 
-    // View binding object to access UI components in the layout
+    // Binding object to access UI components in the layout
     private lateinit var binding: ActivitySignupAndLoginPageBinding
 
     // FirebaseAuth instance for handling authentication
@@ -43,19 +43,20 @@ class SignupAndLoginPage : AppCompatActivity() {
     private var index = 0
     private val delay: Long = 100 // Delay between each character in milliseconds
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        // Initialize the binding object for accessing UI elements
+        // Initialize the binding object to access UI elements
         binding = ActivitySignupAndLoginPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Find the Google Sign-In button in the layout
         val signInButton: SignInButton = findViewById(R.id.signin_Button)
 
-        // Initialize Firebase Authentication and the One Tap client
+        // Initialize Firebase Authentication instance
         auth = FirebaseAuth.getInstance()
+
+        // Initialize One Tap client for Google Sign-In
         oneTapClient = Identity.getSignInClient(this)
 
         // Configure the Google Sign-In request
@@ -94,7 +95,6 @@ class SignupAndLoginPage : AppCompatActivity() {
             }
         })
     }
-
 
     // Function to trigger Google Sign-In
     private fun signinGoogle() {

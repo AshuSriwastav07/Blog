@@ -4,26 +4,28 @@ import com.google.firebase.storage.StorageReference
 
 class DataClass {
 
-    lateinit var BlogTitle:String
-    lateinit var BlogTags:String
-    lateinit var BlogBody:String
-    lateinit var BlogUserID:String
-    lateinit var BlogWriterName:String
-    lateinit var BlogDateAndTime:String
-    lateinit var BlogImageURL:String
-    lateinit var BlogUserProfileUrl:String
+    var BlogTitle:String
+    var BlogTags:String
+    var BlogBody:String
+    var BlogUserID:String
+    var BlogWriterName:String
+    var BlogDateAndTime:String
+    var BlogImageURL:String
+    var BlogUserProfileUrl:String
+    var BlogDocumentID:String
 
 
-    constructor(BlogTitle:String,BlogTags:String,BlogBody:String,BlogUserID:String,BlogWriterName:String,BlogDateAndTime:String,BlogImageURL:String,BlogUserProfileUrl: String)
+    constructor(blogTitle:String,blogTags:String,blogBody:String,blogUserID:String,blogWriterName:String,blogDateAndTime:String,blogImageURL:String,blogUserProfileUrl: String,blogDocumentID:String)
     {
-        this.BlogTitle=BlogTitle
-        this.BlogTags=BlogTags
-        this.BlogBody=BlogBody
-        this.BlogUserID=BlogUserID
-        this.BlogWriterName=BlogWriterName
-        this.BlogDateAndTime=BlogDateAndTime
-        this.BlogImageURL=BlogImageURL
-        this.BlogUserProfileUrl=BlogUserProfileUrl
+        this.BlogTitle=blogTitle
+        this.BlogTags=blogTags
+        this.BlogBody=blogBody
+        this.BlogUserID=blogUserID
+        this.BlogWriterName=blogWriterName
+        this.BlogDateAndTime=blogDateAndTime
+        this.BlogImageURL=blogImageURL
+        this.BlogUserProfileUrl=blogUserProfileUrl
+        this.BlogDocumentID=blogDocumentID
 
     }
 
