@@ -12,6 +12,7 @@ import com.TLC_Developer.DataManager.BlogAdapter
 import com.TLC_Developer.DataManager.DataClass
 import com.TLC_Developer.Post.databinding.ActivityMainBinding
 import com.TLC_Developer.functions.function
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
@@ -59,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         val viewManager = LinearLayoutManager(this)
 
         // Create an adapter for the RecyclerView
-        recyclerViewAdapter = BlogAdapter(BlogDataSet)
+        recyclerViewAdapter = BlogAdapter(BlogDataSet,this)
         blogRecyclerView.apply {
             setHasFixedSize(true) // Optimize RecyclerView performance
             layoutManager = viewManager
@@ -106,6 +107,8 @@ class MainActivity : AppCompatActivity() {
                     Log.d(TAG, "Current data: null")
                 }
             }
+
+
     }
 
     // Function to display user details on the UI

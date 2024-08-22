@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -18,6 +19,7 @@ import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +32,9 @@ class SignupAndLoginPage : AppCompatActivity() {
 
     // FirebaseAuth instance for handling authentication
     private lateinit var auth: FirebaseAuth
+
+    //firestore
+    private val db=FirebaseFirestore.getInstance()
 
     // One Tap client for Google Sign-In
     private var oneTapClient: SignInClient? = null

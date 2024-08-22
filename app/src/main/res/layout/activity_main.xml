@@ -30,7 +30,7 @@
                 android:layout_weight="1"
                 android:background="#C6C6C6"
                 android:fontFamily="@font/acme"
-                android:gravity=""
+                android:gravity="center_vertical"
                 android:paddingStart="@dimen/dp_5"
                 android:text="@string/AppName"
                 android:textSize="@dimen/dp_12"

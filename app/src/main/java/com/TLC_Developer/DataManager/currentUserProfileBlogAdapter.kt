@@ -15,6 +15,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.Post.EditBlogActivity
 import com.TLC_Developer.Post.R
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -57,10 +60,19 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
         stringToDate(blog.BlogDateAndTime, viewHolder)
         // Load the user's profile image using Picasso
         Picasso.get().load(blog.BlogUserProfileUrl).into(viewHolder.userProfileImage)
-        // Set a click listener for the edit button
+
+        // if current user is on profile or other user
+        val user = Firebase.auth.currentUser
+
+        if(user?.uid.toString()!=blog.BlogUserID){
+            viewHolder.blogEditAndReadButton.visibility=View.GONE
+        }
+
         viewHolder.blogEditAndReadButton.setOnClickListener {
             openBlogToEdit(blog.BlogDocumentID, viewHolder)
         }
+
+
     }
 
     // Return the total number of items in the data set

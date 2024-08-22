@@ -1,15 +1,26 @@
 package com.TLC_Developer.functions
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.view.View
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
+import com.TLC_Developer.Post.OnlyViewProfilePage
 import com.TLC_Developer.Post.R
+import com.TLC_Developer.Post.UserProfilePageActivity
+import com.TLC_Developer.Post.WriteBlogPage
 import com.TLC_Developer.Post.databinding.ActivityEditBlogBinding
 import com.TLC_Developer.Post.databinding.ActivityWriteBlogPageBinding
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.squareup.picasso.Picasso
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -27,6 +38,77 @@ class function {
             null
         }
     }
+
+    fun profileViewer(){
+
+    }
+
+    fun socialMediaLinks(context: Context,firestore: FirebaseFirestore,userID:String,Insta:ImageButton,facebook:ImageButton,x:ImageButton,youtube:ImageButton,){
+        var links:ArrayList<String> = arrayListOf()
+
+        firestore.collection("usersDetails")
+            .document(userID)
+            .get()
+            .addOnSuccessListener { document ->
+
+                Insta.setOnClickListener{openSociaMedia(document.getString("InstagramLink").toString(),context)}
+                facebook.setOnClickListener{openSociaMedia(document.getString("FacebookLink").toString(),context)}
+                x.setOnClickListener{openSociaMedia(document.getString("XLink").toString(),context)}
+                youtube.setOnClickListener{openSociaMedia(document.getString("YoutubeLink").toString(),context)}
+
+
+                links.add(document.getString("InstagramLink").toString())
+                links.add(document.getString("FacebookLink").toString())
+                links.add(document.getString("XLink").toString())
+                links.add(document.getString("YoutubeLink").toString())
+            }
+
+    }
+
+    fun getAndSetUserDetails(firestore: FirebaseFirestore,userID:String,userName:TextView,userProfile:ImageView){
+        firestore.collection("usersDetails")
+            .document(userID)
+            .get()
+            .addOnSuccessListener { result ->
+                Log.d("OpenProfilePageLogs",result.getString("userName").toString())
+                Log.d("OpenProfilePageLogs",result.getString("UserprofileUrl").toString())
+
+                userName.text=result.getString("userName").toString()
+                Picasso.get().load(result.getString("UserprofileUrl").toString()).into(userProfile)
+            }
+            .addOnFailureListener { exception ->
+                Log.d("OpenProfileLogs", "Error getting documents: ", exception)
+            }
+
+
+    }
+
+    private fun openSociaMedia(link:String,context: Context){
+        if(link==""){
+            Toast.makeText(context,"Not Available",Toast.LENGTH_LONG).show()
+        }else{
+            val urlIntent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(link)
+            )
+            context.startActivity(urlIntent)
+        }
+
+    }
+
+    fun openProfileSection(userID: String,context: Context){
+        val currentUserID= FirebaseAuth.getInstance().uid
+
+        if(userID==currentUserID) {
+            val intent = Intent(context, UserProfilePageActivity::class.java)
+            context.startActivity(intent)
+        }else{
+            val intent = Intent(context, OnlyViewProfilePage::class.java)
+            intent.putExtra("OpenedProfileUserId",userID)
+            context.startActivity(intent)
+        }
+    }
+
 
 
 }

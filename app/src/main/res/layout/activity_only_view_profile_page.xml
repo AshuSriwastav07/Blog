@@ -5,21 +5,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserProfilePageActivity">
+    tools:context=".OnlyViewProfilePage">
 
-    <ImageButton
-        android:id="@+id/editProfileButton"
-        android:layout_width="@dimen/dp_15"
-        android:layout_height="@dimen/dp_15"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="24dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="@string/imageButtons"
-        android:foregroundGravity="top"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/editprofile"
-        tools:ignore="TouchTargetSizeCheck" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
@@ -46,7 +33,7 @@
             app:cardElevation="4dp">
 
             <ImageView
-                android:id="@+id/ProfilePageProfileImage"
+                android:id="@+id/ViewProfilePageProfileImage"
                 android:layout_width="@dimen/dp_38"
                 android:layout_height="@dimen/dp_38"
                 android:layout_gravity="center"
@@ -60,36 +47,19 @@
         </androidx.cardview.widget.CardView>
 
         <TextView
-            android:id="@+id/ProfilePageUserName"
+            android:id="@+id/ViewProfilePageUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_6"
             android:layout_marginTop="@dimen/dp_4"
             android:layout_marginEnd="@dimen/dp_6"
             android:layout_weight="0"
-            android:drawableLeft="@drawable/baseline_person_24"
-            android:drawableTint="#000000"
             android:fontFamily="@font/merriweather_sans_medium"
             android:gravity="center_vertical"
-            android:text="TextView"
             android:textSize="@dimen/dp_7"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/ProfilePageUserEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp_6"
-            android:layout_marginTop="@dimen/dp_4"
-            android:layout_marginEnd="@dimen/dp_6"
-            android:layout_weight="0"
-            android:drawableLeft="@drawable/baseline_mark_email_read_24"
-            android:drawablePadding="@dimen/dp_4"
-            android:drawableTint="#000000"
-            android:fontFamily="@font/merriweather_sans_medium"
-            android:text="TextView"
-            android:textSize="@dimen/dp_7"
-            android:textStyle="italic" />
+            android:textStyle="bold"
+            app:drawableLeftCompat="@drawable/baseline_person_24"
+            app:drawableTint="#000000" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -99,56 +69,61 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/profileInstaImageButton"
+                android:id="@+id/ViewProfileInstaButton"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_18"
-
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:contentDescription="@string/socialmedia"
+                android:focusable="true"
                 app:srcCompat="@mipmap/instagramicon"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
-                android:id="@+id/profileYTImageButton"
+                android:id="@+id/ViewProfileYTButton"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_18"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:contentDescription="@string/socialmedia"
+                android:focusable="true"
                 app:srcCompat="@mipmap/yt"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
-                android:id="@+id/profileXImageButton"
+                android:id="@+id/ViewProfileXImageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_18"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:contentDescription="@string/socialmedia"
+                android:focusable="true"
                 app:srcCompat="@mipmap/x"
                 tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
-                android:id="@+id/profileFBImageButton"
+                android:id="@+id/ViewProfileFBImageButton"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/dp_18"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:clickable="true"
                 android:contentDescription="@string/socialmedia"
+                android:focusable="true"
                 app:srcCompat="@mipmap/fb"
                 tools:ignore="TouchTargetSizeCheck" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/currentUserProfileBlogsRecyclerview"
+            android:id="@+id/ViewProfileBlogsRecyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0" />
 
     </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

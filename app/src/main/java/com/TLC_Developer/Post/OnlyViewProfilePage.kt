@@ -1,29 +1,29 @@
 package com.TLC_Developer.Post
 
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.DataManager.DataClass
 import com.TLC_Developer.DataManager.currentUserProfileBlogAdapter
-import com.TLC_Developer.Post.databinding.ActivityUserProfilePageBinding
 import com.TLC_Developer.functions.function
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
+import org.w3c.dom.Text
 
-class UserProfilePageActivity : AppCompatActivity() {
-
-    // Binding object to access views in the layout
-    private lateinit var binding: ActivityUserProfilePageBinding
+class OnlyViewProfilePage : AppCompatActivity() {
 
     // Firebase authentication and Firestore instances
     private val firebaseAuth = Firebase.auth.currentUser
-    private val currentUserID = firebaseAuth?.uid.toString()
     private var db = Firebase.firestore
 
     // List to store blog data and adapter for RecyclerView
@@ -31,30 +31,36 @@ class UserProfilePageActivity : AppCompatActivity() {
     private val TAG = "UserProfileLogs"
     private lateinit var blogRecyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: currentUserProfileBlogAdapter
-
     // Function instance for additional operations
     private val functionCalls = function()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityUserProfilePageBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_only_view_profile_page)
 
-        // Get current user details
-        val currentUserName = firebaseAuth?.displayName.toString()
-        val currentUserEmail = firebaseAuth?.email.toString()
-        val currentUserProfileImage = firebaseAuth?.photoUrl.toString()
-        val profileImageImageView: ImageView = findViewById(R.id.ProfilePageProfileImage)
+        val openedUserProfileID=intent?.extras?.getString("OpenedProfileUserId").toString()
+        val userName=findViewById<TextView>(R.id.ViewProfilePageUserName)
+        val instagramButton:ImageButton=findViewById(R.id.ViewProfileInstaButton)
+        val YTButton:ImageButton=findViewById(R.id.ViewProfileYTButton)
+        val XButton:ImageButton=findViewById(R.id.ViewProfileXImageButton)
+        val FBButton:ImageButton=findViewById(R.id.ViewProfileFBImageButton)
 
-        // Set user details in UI
-        binding.ProfilePageUserName.text = currentUserName
-        binding.ProfilePageUserEmail.text = currentUserEmail
+        val profileImageImageView: ImageView = findViewById(R.id.ViewProfilePageProfileImage)
 
-        // Load user profile image using Picasso
-        Picasso.get().load(currentUserProfileImage).into(profileImageImageView)
+        functionCalls.getAndSetUserDetails(db,openedUserProfileID,userName,profileImageImageView)
+        functionCalls.socialMediaLinks(this,db,openedUserProfileID,instagramButton,FBButton,XButton,YTButton)
+
+    }
+
+
+    override fun onStart() {
+        super.onStart()
+
+        val openedUserProfileID=intent?.extras?.getString("OpenedProfileUserId").toString()
+        userProfileBlogData(openedUserProfileID)
 
         // Set up RecyclerView for displaying blogs
-        blogRecyclerView = findViewById(R.id.currentUserProfileBlogsRecyclerview)
+        blogRecyclerView = findViewById(R.id.ViewProfileBlogsRecyclerview)
         val viewManager = LinearLayoutManager(this)
 
         // Initialize RecyclerView adapter
@@ -66,28 +72,10 @@ class UserProfilePageActivity : AppCompatActivity() {
         }
 
 
-
-
     }
 
-    override fun onStart() {
-        super.onStart()
-        function().socialMediaLinks(this,db,currentUserID,binding.profileInstaImageButton,binding.profileFBImageButton,binding.profileXImageButton,binding.profileYTImageButton)
-
-        // Load blog data for the current user
-        userProfileBlogData()
-
-        binding.editProfileButton.setOnClickListener {
-            val intent =Intent(this,SetupProfilePageActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
-
-
-    // Function to load blog data from Firestore for the current user
-    private fun userProfileBlogData() {
-        Log.d(TAG, "Current User ID: $currentUserID")  // Log the current user ID
+    private fun userProfileBlogData(currentUserID:String) {
+        Log.d("onlyViewProfileLogs", "Current User ID: $currentUserID")  // Log the current user ID
 
         db.collection("BlogsData")
             .whereEqualTo("userID", currentUserID) // Filter blogs by current user's ID

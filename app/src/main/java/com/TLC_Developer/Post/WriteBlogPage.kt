@@ -11,9 +11,9 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.TLC_Developer.Post.databinding.ActivityWriteBlogPageBinding
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.text.SimpleDateFormat
@@ -24,6 +24,7 @@ class WriteBlogPage : AppCompatActivity() {
     private lateinit var storageRef: StorageReference
     private lateinit var firebaseFirestore: FirebaseFirestore
     private var imageUri: Uri? = null
+    private lateinit var BGImageUrl: TextInputEditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +41,7 @@ class WriteBlogPage : AppCompatActivity() {
         val BodyTextView = findViewById<TextView>(R.id.BlogBodyEditText)
         val TagsTextView = findViewById<TextView>(R.id.BlogHashTagsEditText)
         val progressBar = findViewById<ProgressBar>(R.id.BlogWriteprogressBar)
+        BGImageUrl = findViewById(R.id.EnterBGImageUrl)
 
         // Set up the publish button to trigger blog publishing
         binding.publishBlogButton.setOnClickListener {
@@ -58,7 +60,7 @@ class WriteBlogPage : AppCompatActivity() {
                 "userID" to userID,
                 "writerName" to userName,
                 "BlogDateAndTime" to currentDate,
-                "BlogUserProfileUrl" to profilePictureUrl,
+                "BlogUserProfileUrl" to profilePictureUrl
             )
 
             // Call the function to upload the blog data
@@ -102,57 +104,54 @@ class WriteBlogPage : AppCompatActivity() {
                         blogData["BlogImageURL"] = uri.toString()
 
                         // Upload the blog data to Firestore
-                        databaseRef.collection("BlogsData")
-                            .add(blogData)
-                            .addOnCompleteListener { blogDataStatus ->
-                                if (blogDataStatus.isSuccessful) {
-                                    // Clear the UI and show success message
-                                    binding.imageUploder.setImageResource(R.mipmap.imageupload)
-                                    binding.BlogBodyEditText.text?.clear()
-                                    binding.BlogTitleEditText.text?.clear()
-                                    binding.BlogHashTagsEditText.text?.clear()
-
-                                    Toast.makeText(this, "Blog is Published", Toast.LENGTH_LONG).show()
-                                    binding.BlogWriteprogressBar.visibility = View.GONE
-                                } else {
-                                    // Handle failure in publishing blog
-                                    Toast.makeText(this, "Blog is not Published", Toast.LENGTH_LONG).show()
-                                }
-                            }
-                            .addOnFailureListener {
-                                // Handle failure in uploading data to Firestore
-                                Toast.makeText(this, "Blog is not Published", Toast.LENGTH_LONG).show()
-                            }
+                        uploadBlogToFirestore(blogData)
                     }
                 } else {
                     // Handle image upload failure
-                    Toast.makeText(this, "Image upload failed", Toast.LENGTH_LONG).show()
-                    binding.BlogWriteprogressBar.visibility = View.GONE
+                    showUploadFailure()
                 }
             }
-        } else {
-            // No image selected, directly upload the blog data to Firestore
-            databaseRef.collection("BlogsData")
-                .add(blogData)
-                .addOnCompleteListener { blogDataStatus ->
-                    if (blogDataStatus.isSuccessful) {
-                        // Clear the UI and show success message
-                        binding.imageUploder.setImageResource(R.mipmap.imageupload)
-                        binding.BlogBodyEditText.text?.clear()
-                        binding.BlogTitleEditText.text?.clear()
-                        binding.BlogHashTagsEditText.text?.clear()
+        } else if (BGImageUrl.text?.isNotEmpty() == true) {
+            // No image selected but user provided an image URL
+            blogData["BlogImageURL"] = BGImageUrl.text.toString()
 
-                        Toast.makeText(this, "Blog is Published", Toast.LENGTH_LONG).show()
-                        binding.BlogWriteprogressBar.visibility = View.GONE
-                    } else {
-                        // Handle failure in publishing blog
-                        Toast.makeText(this, "Blog is not Published", Toast.LENGTH_LONG).show()
-                    }
-                }
-                .addOnFailureListener {
-                    // Handle failure in uploading data to Firestore
-                    Toast.makeText(this, "Blog is not Published", Toast.LENGTH_LONG).show()
-                }
+            // Upload the blog data to Firestore
+            uploadBlogToFirestore(blogData)
+        } else {
+            // No image or URL provided, upload the blog data without an image URL
+            uploadBlogToFirestore(blogData)
         }
+    }
+
+    // Function to upload the blog data to Firestore
+    private fun uploadBlogToFirestore(blogData: HashMap<String, Any>) {
+        firebaseFirestore.collection("BlogsData")
+            .add(blogData)
+            .addOnCompleteListener { blogDataStatus ->
+                if (blogDataStatus.isSuccessful) {
+                    clearUIAfterSuccess()
+                    Toast.makeText(this, "Blog is Published", Toast.LENGTH_LONG).show()
+                } else {
+                    showUploadFailure()
+                }
+            }
+            .addOnFailureListener {
+                showUploadFailure()
+            }
+    }
+
+    // Function to clear UI elements after successful upload
+    private fun clearUIAfterSuccess() {
+        binding.imageUploder.setImageResource(R.mipmap.imageupload)
+        binding.BlogBodyEditText.text?.clear()
+        binding.BlogTitleEditText.text?.clear()
+        binding.BlogHashTagsEditText.text?.clear()
+        binding.BlogWriteprogressBar.visibility = View.GONE
+    }
+
+    // Function to handle upload failures
+    private fun showUploadFailure() {
+        Toast.makeText(this, "Blog is not Published", Toast.LENGTH_LONG).show()
+        binding.BlogWriteprogressBar.visibility = View.GONE
     }
 }

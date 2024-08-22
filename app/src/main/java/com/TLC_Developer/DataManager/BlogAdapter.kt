@@ -1,20 +1,23 @@
 package com.TLC_Developer.DataManager
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.text.format.DateUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.Post.R
+import com.TLC_Developer.functions.function
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.*
 
 // Adapter class for displaying blog posts in a RecyclerView
-class BlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
+class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var context: Context) :
     RecyclerView.Adapter<BlogAdapter.ViewHolder>() {
 
     // ViewHolder class to hold and recycle views
@@ -25,6 +28,7 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
         val userProfileImage: ImageView = view.findViewById(R.id.userBlogProfileImage) // User's profile image
         val userName: TextView = view.findViewById(R.id.blogWriterName) // Writer's name
         val blogTags: TextView = view.findViewById(R.id.blogTage) // Tags associated with the blog
+        val blogWriterMiniProfileCardView:CardView=view.findViewById(R.id.blogWriterMiniProfileCardview)
     }
 
     // Create new ViewHolder instances
@@ -46,8 +50,20 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
         // Format and set the date and time
         stringToDate(blog.BlogDateAndTime, viewHolder)
         // Load the blog's background image and user's profile image using Picasso
-        Picasso.get().load(blog.BlogImageURL).into(viewHolder.blogBgImageView)
+
+        if(blog.BlogImageURL==""){
+            Picasso.get().load("https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg").into(viewHolder.blogBgImageView)
+
+        }else{
+            Picasso.get().load(blog.BlogImageURL).into(viewHolder.blogBgImageView)
+        }
+
         Picasso.get().load(blog.BlogUserProfileUrl).into(viewHolder.userProfileImage)
+
+        viewHolder.blogWriterMiniProfileCardView.setOnClickListener {
+            function().openProfileSection(blog.BlogUserID,context)
+        }
+
     }
 
     // Return the total number of items in the data set
@@ -72,4 +88,6 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
             else -> dateString // Default to the original date string
         }
     }
+
+
 }
