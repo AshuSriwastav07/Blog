@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.TLC_Developer.Post.databinding.ActivityEditBlogBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
@@ -46,11 +45,10 @@ class EditBlogActivity : AppCompatActivity() {
 
         // Get the current user's ID and profile information
         val userID = FirebaseAuth.getInstance().currentUser?.uid.toString()
-        val userName = FirebaseAuth.getInstance().currentUser?.displayName.toString()
         val profilePictureUrl = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
 
         // Get Document ID passed via Intent (Used to identify the blog post to edit)
-        documentID = intent?.extras?.getString("dataToEdit").toString()
+        documentID = intent?.extras?.getString("documentID_forDataToEdit").toString()
         Log.d(TAG, documentID)
 
         // Fetch existing blog data to pre-fill the form for editing
@@ -87,7 +85,6 @@ class EditBlogActivity : AppCompatActivity() {
                 "body" to body,
                 "tags" to tags,
                 "userID" to userID,
-                "writerName" to userName,
                 "BlogDateAndTime" to currentDate,
                 "BlogUserProfileUrl" to profilePictureUrl,
                 "documentID" to documentID
@@ -152,24 +149,31 @@ class EditBlogActivity : AppCompatActivity() {
             .addOnCompleteListener { blogDataStatus ->
                 if (blogDataStatus.isSuccessful) {
                     // Clear the UI after successful update
-                    binding.EditImageUpload.setImageResource(R.mipmap.imageupload)
-                    binding.EditBlogBodyEditText.text?.clear()
-                    binding.EditBlogTitleEditText.text?.clear()
-                    binding.EditBlogHashTagsEditText.text?.clear()
+                   clearUIAfterSuccess()
 
                     // Notify the user of success
-                    Toast.makeText(this, "Blog is Published", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Blog is Updated", Toast.LENGTH_LONG).show()
                     binding.BlogWriteprogressBar.visibility = View.GONE
+                    finish()
                 } else {
                     // Notify the user of failure
-                    Toast.makeText(this, "Blog is not Published", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Blog is not Updated", Toast.LENGTH_LONG).show()
                     binding.BlogWriteprogressBar.visibility = View.GONE
                 }
             }
             .addOnFailureListener {
                 // Handle the failure case
-                Toast.makeText(this, "Blog is not Published", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Blog is not Updated", Toast.LENGTH_LONG).show()
                 binding.BlogWriteprogressBar.visibility = View.GONE
             }
+    }
+
+    // Function to clear UI elements after successful upload
+    private fun clearUIAfterSuccess() {
+        binding.EditImageUpload.setImageResource(R.mipmap.imageupload)
+        binding.EditBlogBodyEditText.text?.clear()
+        binding.EditBlogTitleEditText.text?.clear()
+        binding.EditBlogHashTagsEditText.text?.clear()
+        binding.BlogWriteprogressBar.visibility = View.GONE
     }
 }

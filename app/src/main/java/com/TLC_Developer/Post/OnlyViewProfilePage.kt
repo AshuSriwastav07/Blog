@@ -5,26 +5,20 @@ import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.DataManager.DataClass
 import com.TLC_Developer.DataManager.currentUserProfileBlogAdapter
 import com.TLC_Developer.functions.function
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.squareup.picasso.Picasso
-import org.w3c.dom.Text
 
 class OnlyViewProfilePage : AppCompatActivity() {
 
     // Firebase authentication and Firestore instances
-    private val firebaseAuth = Firebase.auth.currentUser
     private var db = Firebase.firestore
+    val openedUserProfileID=intent?.extras?.getString("OpenedProfileUserId").toString() //get Data
 
     // List to store blog data and adapter for RecyclerView
     private var userBlogListData: ArrayList<DataClass> = ArrayList()
@@ -38,7 +32,7 @@ class OnlyViewProfilePage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_only_view_profile_page)
 
-        val openedUserProfileID=intent?.extras?.getString("OpenedProfileUserId").toString()
+
         val userName=findViewById<TextView>(R.id.ViewProfilePageUserName)
         val instagramButton:ImageButton=findViewById(R.id.ViewProfileInstaButton)
         val YTButton:ImageButton=findViewById(R.id.ViewProfileYTButton)
@@ -56,7 +50,6 @@ class OnlyViewProfilePage : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val openedUserProfileID=intent?.extras?.getString("OpenedProfileUserId").toString()
         userProfileBlogData(openedUserProfileID)
 
         // Set up RecyclerView for displaying blogs
@@ -92,7 +85,6 @@ class OnlyViewProfilePage : AppCompatActivity() {
                         blogUserID = document.getString("userID") ?: "",
                         blogDateAndTime = document.getString("BlogDateAndTime") ?: "",
                         blogImageURL = document.getString("BlogImageURL") ?: "",
-                        blogWriterName = document.getString("writerName") ?: "",
                         blogUserProfileUrl = document.getString("BlogUserProfileUrl") ?: "",
                         blogDocumentID = document.id
                     )

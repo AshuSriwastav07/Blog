@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = "com.TLC_Developer.Post"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"

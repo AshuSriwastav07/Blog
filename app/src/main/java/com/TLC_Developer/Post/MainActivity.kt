@@ -1,8 +1,6 @@
 package com.TLC_Developer.Post
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
@@ -13,14 +11,10 @@ import com.TLC_Developer.DataManager.DataClass
 import com.TLC_Developer.Post.databinding.ActivityMainBinding
 import com.TLC_Developer.functions.function
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import java.text.ParseException
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.concurrent.Executors
+import com.squareup.picasso.Picasso
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -37,7 +31,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Show user details on the UI
-        ShowUserDetails()
+        val profileImageUrl=FirebaseAuth.getInstance().currentUser?.photoUrl
+        Picasso.get().load(profileImageUrl).into(binding.userProfile)
+
 
         // Set up click listeners for buttons
         binding.writeBlogButton.setOnClickListener {
@@ -88,7 +84,6 @@ class MainActivity : AppCompatActivity() {
                             blogUserID = document.getString("userID") ?: "",
                             blogDateAndTime = document.getString("BlogDateAndTime") ?: "",
                             blogImageURL = document.getString("BlogImageURL") ?: "",
-                            blogWriterName = document.getString("writerName") ?: "",
                             blogUserProfileUrl = document.getString("BlogUserProfileUrl") ?: "",
                             blogDocumentID = document.id
                         )
@@ -111,37 +106,4 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    // Function to display user details on the UI
-    private fun ShowUserDetails() {
-        val user = Firebase.auth.currentUser
-        user?.let {
-            val name = it.uid
-            val email = it.email
-            val photoUrl = it.photoUrl
-            val emailVerified = it.isEmailVerified
-
-            // Load the user's profile image
-            var image: Bitmap? = null
-            val imageURL = photoUrl.toString()
-            val executorService = Executors.newSingleThreadExecutor()
-            executorService.execute {
-                try {
-                    // Download and decode the image from the URL
-                    val `in` = java.net.URL(imageURL).openStream()
-                    image = BitmapFactory.decodeStream(`in`)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-            runOnUiThread {
-                try {
-                    // Wait for the image to be downloaded and then set it to the ImageView
-                    Thread.sleep(1000)
-                    binding.userProfile.setImageBitmap(image)
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-        }
-    }
 }

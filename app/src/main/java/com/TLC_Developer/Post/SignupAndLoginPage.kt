@@ -44,7 +44,7 @@ class SignupAndLoginPage : AppCompatActivity() {
 
     // Variables for text animation (typewriter effect)
     private lateinit var typewriterTextView: TextView
-    private val textToAnimate = "Welcome to the Blog Era! Unleash your creativity and start crafting your stories today. Share your thoughts, experiences, and passions with the world. Your words have the power to inspire, influence, and ignite change. Dive in, write your best blogs, and let's make a difference together!"
+    private val textToAnimate = "Welcome to the Post! Unleash your creativity and start crafting your stories today. Share your thoughts, experiences, and passions with the world. Your words have the power to inspire, influence, and ignite change. Dive in, write your best blogs, and let's make a difference together!"
     private var index = 0
     private val delay: Long = 100 // Delay between each character in milliseconds
 

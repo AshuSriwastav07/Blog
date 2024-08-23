@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.Post.EditBlogActivity
 import com.TLC_Developer.Post.R
+import com.TLC_Developer.functions.function
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -37,8 +38,7 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
         val blogEditAndReadButton: ImageButton = view.findViewById(R.id.currentUser_BlogEditButton)
 
         // Optional views commented out as they are not used
-        /*val blogBgImageView: ImageView = view.findViewById(R.id.blogItemImageView)
-        val blogTags: TextView = view.findViewById(R.id.blogTage)*/
+
     }
 
     // Create new ViewHolder instances
@@ -53,9 +53,14 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Get the blog data for the current position
         val blog = blogDataSet[position]
+
         // Set the blog title and writer's name
+        function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
+            viewHolder.userName.text = userName
+            Log.d("functionLogs", userName.toString())
+        }
+
         viewHolder.blogTitle.text = blog.BlogTitle
-        viewHolder.userName.text = blog.BlogWriterName
         // Format and set the date and time
         stringToDate(blog.BlogDateAndTime, viewHolder)
         // Load the user's profile image using Picasso
@@ -103,7 +108,7 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
         val context = holder.itemView.context
         val intent = Intent(context, EditBlogActivity::class.java)
         // Pass the blog document ID to the EditBlogActivity
-        intent.putExtra("dataToEdit", blogDocumentID)
+        intent.putExtra("documentID_forDataToEdit", blogDocumentID)
         context.startActivity(intent) // Start the EditBlogActivity
     }
 }

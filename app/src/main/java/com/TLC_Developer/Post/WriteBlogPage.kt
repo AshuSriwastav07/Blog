@@ -33,7 +33,6 @@ class WriteBlogPage : AppCompatActivity() {
 
         // Get the current user's information
         val userID = FirebaseAuth.getInstance().currentUser?.uid.toString()
-        val userName = FirebaseAuth.getInstance().currentUser?.displayName.toString()
         val profilePictureUrl = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
 
         // Initialize views and Firebase
@@ -58,7 +57,6 @@ class WriteBlogPage : AppCompatActivity() {
                 "body" to body,
                 "tags" to tags,
                 "userID" to userID,
-                "writerName" to userName,
                 "BlogDateAndTime" to currentDate,
                 "BlogUserProfileUrl" to profilePictureUrl
             )

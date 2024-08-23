@@ -2,7 +2,9 @@ package com.TLC_Developer.DataManager
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.text.format.DateUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +13,12 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.Post.R
+import com.TLC_Developer.Post.readBlogPageActivity
 import com.TLC_Developer.functions.function
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 // Adapter class for displaying blog posts in a RecyclerView
 class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var context: Context) :
@@ -29,6 +33,8 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
         val userName: TextView = view.findViewById(R.id.blogWriterName) // Writer's name
         val blogTags: TextView = view.findViewById(R.id.blogTage) // Tags associated with the blog
         val blogWriterMiniProfileCardView:CardView=view.findViewById(R.id.blogWriterMiniProfileCardview)
+        val ImageCardView:CardView=view.findViewById(R.id.HomePageBlogImageCardView)
+
     }
 
     // Create new ViewHolder instances
@@ -45,12 +51,33 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
         val blog = blogDataSet[position]
         // Set the blog title and writer's name
         viewHolder.blogTitle.text = blog.BlogTitle
-        viewHolder.userName.text = blog.BlogWriterName
+
+        //get and Set User name for each Item
+        function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
+            viewHolder.userName.text = userName
+            Log.d("functionLogs", userName.toString())
+        }
+
         viewHolder.blogTags.text = blog.BlogTags
+
+        val dataForReadingBlog:java.util.ArrayList<String> = arrayListOf(
+            blog.BlogTitle,
+            blog.BlogDateAndTime,
+            blog.BlogImageURL,
+            blog.BlogBody,
+        )
+
+        //Add Specific Blog writer name in readDataSet
+        function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
+            dataForReadingBlog.add(userName)
+            Log.d("BlogAdapterLogs",userName)
+        }
+
+
         // Format and set the date and time
         stringToDate(blog.BlogDateAndTime, viewHolder)
-        // Load the blog's background image and user's profile image using Picasso
 
+        // Load the blog's background image and user's profile image using Picasso
         if(blog.BlogImageURL==""){
             Picasso.get().load("https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg").into(viewHolder.blogBgImageView)
 
@@ -58,10 +85,21 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
             Picasso.get().load(blog.BlogImageURL).into(viewHolder.blogBgImageView)
         }
 
+        //load Profile Image
         Picasso.get().load(blog.BlogUserProfileUrl).into(viewHolder.userProfileImage)
 
+        //Open specific use profile
         viewHolder.blogWriterMiniProfileCardView.setOnClickListener {
             function().openProfileSection(blog.BlogUserID,context)
+        }
+
+        //Open Blog for Reading
+        viewHolder.blogTitle.setOnClickListener{
+            readBlog(context,dataForReadingBlog)
+        }
+
+        viewHolder.ImageCardView.setOnClickListener{
+            readBlog(context,dataForReadingBlog)
         }
 
     }
@@ -87,6 +125,12 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
             diff < 2 * DateUtils.DAY_IN_MILLIS -> "Yesterday" // Less than two days ago
             else -> dateString // Default to the original date string
         }
+    }
+
+    fun readBlog(context: Context,blogReadingData:ArrayList<String>){
+        val intent = Intent(context,readBlogPageActivity::class.java)
+        intent.putStringArrayListExtra("blogData",blogReadingData)
+        context.startActivity(intent)
     }
 
 

@@ -18,6 +18,8 @@ import com.TLC_Developer.Post.databinding.ActivityEditBlogBinding
 import com.TLC_Developer.Post.databinding.ActivityWriteBlogPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.squareup.picasso.Picasso
@@ -27,6 +29,9 @@ import java.util.Date
 import java.util.Locale
 
 class function {
+
+    private val firestoreDB = Firebase.firestore
+    private val currentUserID=FirebaseAuth.getInstance().currentUser?.uid
 
     // Convert String to Date
     fun convertStringToDate(dateString: String): Date? {
@@ -39,12 +44,9 @@ class function {
         }
     }
 
-    fun profileViewer(){
-
-    }
 
     fun socialMediaLinks(context: Context,firestore: FirebaseFirestore,userID:String,Insta:ImageButton,facebook:ImageButton,x:ImageButton,youtube:ImageButton,){
-        var links:ArrayList<String> = arrayListOf()
+//        var links:ArrayList<String> = arrayListOf()
 
         firestore.collection("usersDetails")
             .document(userID)
@@ -57,10 +59,10 @@ class function {
                 youtube.setOnClickListener{openSociaMedia(document.getString("YoutubeLink").toString(),context)}
 
 
-                links.add(document.getString("InstagramLink").toString())
+                /*links.add(document.getString("InstagramLink").toString())
                 links.add(document.getString("FacebookLink").toString())
                 links.add(document.getString("XLink").toString())
-                links.add(document.getString("YoutubeLink").toString())
+                links.add(document.getString("YoutubeLink").toString())*/
             }
 
     }
@@ -70,8 +72,8 @@ class function {
             .document(userID)
             .get()
             .addOnSuccessListener { result ->
-                Log.d("OpenProfilePageLogs",result.getString("userName").toString())
-                Log.d("OpenProfilePageLogs",result.getString("UserprofileUrl").toString())
+//                Log.d("OpenProfilePageLogs",result.getString("userName").toString())
+//                Log.d("OpenProfilePageLogs",result.getString("UserprofileUrl").toString())
 
                 userName.text=result.getString("userName").toString()
                 Picasso.get().load(result.getString("UserprofileUrl").toString()).into(userProfile)
@@ -98,7 +100,6 @@ class function {
 
     fun openProfileSection(userID: String,context: Context){
         val currentUserID= FirebaseAuth.getInstance().uid
-
         if(userID==currentUserID) {
             val intent = Intent(context, UserProfilePageActivity::class.java)
             context.startActivity(intent)
@@ -108,6 +109,52 @@ class function {
             context.startActivity(intent)
         }
     }
+
+    fun getUserSpecificData(userID: String,dataName:String, callback: (String) -> Unit) {
+        firestoreDB.collection("usersDetails")
+            .document(userID)
+            .get()
+            .addOnSuccessListener { result ->
+                val userName = result.getString(dataName).toString()
+                callback(userName)  // Use the callback to return the result
+            }
+            .addOnFailureListener { exception ->
+                Log.d("OpenProfileLogs", "Error getting documents: ", exception)
+                callback("")  // Return an empty string or handle the error as needed
+            }
+    }
+
+    fun UpdateUserName(userName:String){
+
+        firestoreDB.collection("BlogsData")
+            .whereEqualTo("userID", currentUserID)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                // Iterate over each document and update the writerName field
+                for (document in querySnapshot) {
+                    val documentID = document.id
+
+                    // Update the writerName for each document
+                    firestoreDB.collection("BlogsData").document(documentID)
+                        .update("writerName", userName)
+                        .addOnSuccessListener {
+                            Log.d("OpenProfileLogs", "Writer name updated successfully for document: $documentID")
+                        }
+                        .addOnFailureListener { e ->
+                            Log.e("OpenProfileLogs", "Error updating document: $documentID", e)
+                        }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("OpenProfileLogs", "Error querying documents", e)
+            }
+    }
+
+    fun currentUserPersonalDetails(){
+
+    }
+
+
 
 
 

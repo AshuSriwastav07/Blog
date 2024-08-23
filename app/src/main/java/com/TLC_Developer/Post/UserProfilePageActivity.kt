@@ -41,14 +41,16 @@ class UserProfilePageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Get current user details
-        val currentUserName = firebaseAuth?.displayName.toString()
-        val currentUserEmail = firebaseAuth?.email.toString()
         val currentUserProfileImage = firebaseAuth?.photoUrl.toString()
         val profileImageImageView: ImageView = findViewById(R.id.ProfilePageProfileImage)
 
         // Set user details in UI
-        binding.ProfilePageUserName.text = currentUserName
-        binding.ProfilePageUserEmail.text = currentUserEmail
+        function().getUserSpecificData(currentUserID,"userName") { userName ->
+            binding.ProfilePageUserName.text = userName
+        }
+
+        binding.ProfilePageUserEmail.text = firebaseAuth?.email
+
 
         // Load user profile image using Picasso
         Picasso.get().load(currentUserProfileImage).into(profileImageImageView)
@@ -104,7 +106,6 @@ class UserProfilePageActivity : AppCompatActivity() {
                         blogUserID = document.getString("userID") ?: "",
                         blogDateAndTime = document.getString("BlogDateAndTime") ?: "",
                         blogImageURL = document.getString("BlogImageURL") ?: "",
-                        blogWriterName = document.getString("writerName") ?: "",
                         blogUserProfileUrl = document.getString("BlogUserProfileUrl") ?: "",
                         blogDocumentID = document.id
                     )

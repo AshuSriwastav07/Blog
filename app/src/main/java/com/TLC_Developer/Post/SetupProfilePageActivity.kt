@@ -6,6 +6,7 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.TLC_Developer.functions.function
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -43,7 +44,9 @@ class SetupProfilePageActivity : AppCompatActivity() {
         saveProfileButton = findViewById(R.id.saveProfileButton)
 
         // Set Data in Edit Texts
-        userNameEditText.setText(auth.currentUser?.displayName)
+        function().getUserSpecificData(currentUserID,"userName") { userName ->
+            userNameEditText.setText(userName)
+        }
 
         // Fetch existing profile data
         firebaseFireStore.collection("usersDetails").document(currentUserID)
@@ -99,6 +102,9 @@ class SetupProfilePageActivity : AppCompatActivity() {
                         )
 
                         // Update the user's profile data in Firestore
+
+                        function().UpdateUserName(userName)
+
                         firebaseFireStore.collection("usersDetails").document(currentUserID)
                             .set(profileData)
                             .addOnSuccessListener {
@@ -116,6 +122,9 @@ class SetupProfilePageActivity : AppCompatActivity() {
                 .addOnFailureListener { e ->
                     Log.d(TAG, "Error fetching profile data: ", e)
                 }
+
+
+
         }
     }
 }

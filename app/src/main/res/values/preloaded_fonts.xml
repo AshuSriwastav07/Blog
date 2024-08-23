@@ -3,6 +3,7 @@
     <array name="preloaded_fonts" translatable="false">
         <item>@font/acme</item>
         <item>@font/alata</item>
+        <item>@font/merriweather_light</item>
         <item>@font/merriweather_sans_medium</item>
     </array>
 </resources>
