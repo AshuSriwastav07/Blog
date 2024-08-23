@@ -55,7 +55,7 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
         //get and Set User name for each Item
         function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
             viewHolder.userName.text = userName
-            Log.d("functionLogs", userName.toString())
+//            Log.d("functionLogs", userName.toString())
         }
 
         viewHolder.blogTags.text = blog.BlogTags
@@ -70,7 +70,7 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
         //Add Specific Blog writer name in readDataSet
         function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
             dataForReadingBlog.add(userName)
-            Log.d("BlogAdapterLogs",userName)
+//            Log.d("BlogAdapterLogs",userName)
         }
 
 
@@ -86,7 +86,11 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
         }
 
         //load Profile Image
-        Picasso.get().load(blog.BlogUserProfileUrl).into(viewHolder.userProfileImage)
+        Picasso.get()
+            .load(blog.BlogUserProfileUrl)
+            .error(R.mipmap.profileicon)
+            .placeholder(R.mipmap.profileicon)
+            .into(viewHolder.userProfileImage)
 
         //Open specific use profile
         viewHolder.blogWriterMiniProfileCardView.setOnClickListener {

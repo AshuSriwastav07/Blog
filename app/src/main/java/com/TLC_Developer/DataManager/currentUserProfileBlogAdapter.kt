@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.Post.EditBlogActivity
 import com.TLC_Developer.Post.R
+import com.TLC_Developer.Post.readBlogPageActivity
 import com.TLC_Developer.functions.function
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -57,24 +58,40 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
         // Set the blog title and writer's name
         function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
             viewHolder.userName.text = userName
-            Log.d("functionLogs", userName.toString())
+//            Log.d("functionLogs", userName.toString())
         }
 
         viewHolder.blogTitle.text = blog.BlogTitle
         // Format and set the date and time
         stringToDate(blog.BlogDateAndTime, viewHolder)
         // Load the user's profile image using Picasso
-        Picasso.get().load(blog.BlogUserProfileUrl).into(viewHolder.userProfileImage)
+        Picasso.get()
+            .load(blog.BlogUserProfileUrl)
+            .error(R.mipmap.profileicon)
+            .placeholder(R.mipmap.profileicon)
+            .into(viewHolder.userProfileImage)
 
         // if current user is on profile or other user
         val user = Firebase.auth.currentUser
-
-        if(user?.uid.toString()!=blog.BlogUserID){
-            viewHolder.blogEditAndReadButton.visibility=View.GONE
+        val context=viewHolder.itemView.context
+        val dataForReadingBlog:java.util.ArrayList<String> = arrayListOf(
+            blog.BlogTitle,
+            blog.BlogDateAndTime,
+            blog.BlogImageURL,
+            blog.BlogBody,
+        )
+        function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
+            dataForReadingBlog.add(userName)
+//            Log.d("BlogAdapterLogs",userName)
         }
 
+
         viewHolder.blogEditAndReadButton.setOnClickListener {
-            openBlogToEdit(blog.BlogDocumentID, viewHolder)
+            if(user?.uid.toString()!=blog.BlogUserID){
+                readBlog(context,dataForReadingBlog)
+            }else if(user?.uid.toString()==blog.BlogUserID) {
+                openBlogToEdit(blog.BlogDocumentID, viewHolder)
+            }
         }
 
 
@@ -111,4 +128,11 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
         intent.putExtra("documentID_forDataToEdit", blogDocumentID)
         context.startActivity(intent) // Start the EditBlogActivity
     }
+
+    fun readBlog(context: Context,blogReadingData:ArrayList<String>){
+        val intent = Intent(context, readBlogPageActivity::class.java)
+        intent.putStringArrayListExtra("blogData",blogReadingData)
+        context.startActivity(intent)
+    }
+
 }

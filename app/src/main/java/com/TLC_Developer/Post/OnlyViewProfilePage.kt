@@ -42,7 +42,7 @@ class OnlyViewProfilePage : AppCompatActivity() {
 
         functionCalls.getAndSetUserDetails(db,openedUserProfileID,userName,profileImageImageView)
         functionCalls.socialMediaLinks(this,db,openedUserProfileID,instagramButton,FBButton,XButton,YTButton)
-        Log.d("FireaseuserID",openedUserProfileID)
+//        Log.d("FireaseuserID",openedUserProfileID)
 
     }
 
@@ -68,7 +68,7 @@ class OnlyViewProfilePage : AppCompatActivity() {
     }
 
     private fun userProfileBlogData(currentUserID:String) {
-        Log.d("onlyViewProfileLogs", "Current User ID: $currentUserID")  // Log the current user ID
+//        Log.d("onlyViewProfileLogs", "Current User ID: $currentUserID")  // Log the current user ID
 
         db.collection("BlogsData")
             .whereEqualTo("userID", currentUserID) // Filter blogs by current user's ID

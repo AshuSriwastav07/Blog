@@ -32,7 +32,11 @@ class MainActivity : AppCompatActivity() {
 
         // Show user details on the UI
         val profileImageUrl=FirebaseAuth.getInstance().currentUser?.photoUrl
-        Picasso.get().load(profileImageUrl).into(binding.userProfile)
+        Picasso.get()
+            .load(profileImageUrl)
+            .error(R.mipmap.profileicon)
+            .placeholder(R.mipmap.profileicon)
+            .into(binding.userProfile)
 
 
         // Set up click listeners for buttons

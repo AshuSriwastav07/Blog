@@ -36,7 +36,7 @@ class readBlogPageActivity : AppCompatActivity() {
             val result = Html.fromHtml(blogData.get(3));
             binding.BlogReadingBody.text=result
             binding.BlogReadingWriterName.text=blogData.get(4)
-            Log.d("BlogAdapterLogs",blogData.get(4))
+//            Log.d("BlogAdapterLogs",blogData.get(4))
 
 
 

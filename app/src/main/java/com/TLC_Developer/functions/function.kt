@@ -76,7 +76,11 @@ class function {
 //                Log.d("OpenProfilePageLogs",result.getString("UserprofileUrl").toString())
 
                 userName.text=result.getString("userName").toString()
-                Picasso.get().load(result.getString("UserprofileUrl").toString()).into(userProfile)
+                Picasso.get()
+                    .load(result.getString("UserprofileUrl").toString())
+                    .error(R.mipmap.profileicon)
+                    .placeholder(R.mipmap.profileicon)
+                    .into(userProfile)
             }
             .addOnFailureListener { exception ->
                 Log.d("OpenProfileLogs", "Error getting documents: ", exception)

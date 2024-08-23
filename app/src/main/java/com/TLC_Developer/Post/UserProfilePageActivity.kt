@@ -53,7 +53,11 @@ class UserProfilePageActivity : AppCompatActivity() {
 
 
         // Load user profile image using Picasso
-        Picasso.get().load(currentUserProfileImage).into(profileImageImageView)
+        Picasso.get()
+            .load(currentUserProfileImage)
+            .error(R.mipmap.profileicon)
+            .placeholder(R.mipmap.profileicon)
+            .into(profileImageImageView)
 
         // Set up RecyclerView for displaying blogs
         blogRecyclerView = findViewById(R.id.currentUserProfileBlogsRecyclerview)
