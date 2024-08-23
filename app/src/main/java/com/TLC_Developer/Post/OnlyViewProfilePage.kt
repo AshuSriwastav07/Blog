@@ -18,7 +18,6 @@ class OnlyViewProfilePage : AppCompatActivity() {
 
     // Firebase authentication and Firestore instances
     private var db = Firebase.firestore
-    val openedUserProfileID=intent?.extras?.getString("OpenedProfileUserId").toString() //get Data
 
     // List to store blog data and adapter for RecyclerView
     private var userBlogListData: ArrayList<DataClass> = ArrayList()
@@ -31,7 +30,7 @@ class OnlyViewProfilePage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_only_view_profile_page)
-
+        val openedUserProfileID=intent?.extras?.getString("OpenedProfileUserId").toString()
 
         val userName=findViewById<TextView>(R.id.ViewProfilePageUserName)
         val instagramButton:ImageButton=findViewById(R.id.ViewProfileInstaButton)
@@ -43,13 +42,14 @@ class OnlyViewProfilePage : AppCompatActivity() {
 
         functionCalls.getAndSetUserDetails(db,openedUserProfileID,userName,profileImageImageView)
         functionCalls.socialMediaLinks(this,db,openedUserProfileID,instagramButton,FBButton,XButton,YTButton)
+        Log.d("FireaseuserID",openedUserProfileID)
 
     }
 
 
     override fun onStart() {
         super.onStart()
-
+        val openedUserProfileID=intent?.extras?.getString("OpenedProfileUserId").toString() //get Data
         userProfileBlogData(openedUserProfileID)
 
         // Set up RecyclerView for displaying blogs

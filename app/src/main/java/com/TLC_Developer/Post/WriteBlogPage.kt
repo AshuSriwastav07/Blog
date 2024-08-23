@@ -129,6 +129,7 @@ class WriteBlogPage : AppCompatActivity() {
                 if (blogDataStatus.isSuccessful) {
                     clearUIAfterSuccess()
                     Toast.makeText(this, "Blog is Published", Toast.LENGTH_LONG).show()
+                    finish()
                 } else {
                     showUploadFailure()
                 }
