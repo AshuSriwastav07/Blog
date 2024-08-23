@@ -35,7 +35,14 @@ class readBlogPageActivity : AppCompatActivity() {
             Picasso.get().load(blogData.get(2)).into(binding.BlogReadingImageView)
             val result = Html.fromHtml(blogData.get(3));
             binding.BlogReadingBody.text=result
-            binding.BlogReadingWriterName.text=blogData.get(4)
+            binding.BlogReadingWriterName.text=blogData.get(5)
+            Picasso.get()
+                .load(blogData.get(4))
+                .error(R.mipmap.profileicon)
+                .placeholder(R.mipmap.profileicon)
+                .into(binding.readBlogUserProfileImage)
+
+
 //            Log.d("BlogAdapterLogs",blogData.get(4))
 
 

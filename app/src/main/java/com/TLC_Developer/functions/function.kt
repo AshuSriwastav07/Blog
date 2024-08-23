@@ -18,6 +18,7 @@ import com.TLC_Developer.Post.databinding.ActivityEditBlogBinding
 import com.TLC_Developer.Post.databinding.ActivityWriteBlogPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Source
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
@@ -53,16 +54,11 @@ class function {
             .get()
             .addOnSuccessListener { document ->
 
-                Insta.setOnClickListener{openSociaMedia(document.getString("InstagramLink").toString(),context)}
-                facebook.setOnClickListener{openSociaMedia(document.getString("FacebookLink").toString(),context)}
-                x.setOnClickListener{openSociaMedia(document.getString("XLink").toString(),context)}
-                youtube.setOnClickListener{openSociaMedia(document.getString("YoutubeLink").toString(),context)}
+                Insta.setOnClickListener{openSocialMedia(document.getString("InstagramLink").toString(),context)}
+                facebook.setOnClickListener{openSocialMedia(document.getString("FacebookLink").toString(),context)}
+                x.setOnClickListener{openSocialMedia(document.getString("XLink").toString(),context)}
+                youtube.setOnClickListener{openSocialMedia(document.getString("YoutubeLink").toString(),context)}
 
-
-                /*links.add(document.getString("InstagramLink").toString())
-                links.add(document.getString("FacebookLink").toString())
-                links.add(document.getString("XLink").toString())
-                links.add(document.getString("YoutubeLink").toString())*/
             }
 
     }
@@ -89,15 +85,16 @@ class function {
 
     }
 
-    private fun openSociaMedia(link:String,context: Context){
-        if(link==""){
-            Toast.makeText(context,"Not Available",Toast.LENGTH_LONG).show()
-        }else{
+    private fun openSocialMedia(link:String,context: Context){
+        if(link!=""){
             val urlIntent = Intent(
                 Intent.ACTION_VIEW,
                 Uri.parse(link)
             )
             context.startActivity(urlIntent)
+        }else{
+            Toast.makeText(context,"Not Available",Toast.LENGTH_LONG).show()
+
         }
 
     }
@@ -115,9 +112,10 @@ class function {
     }
 
     fun getUserSpecificData(userID: String,dataName:String, callback: (String) -> Unit) {
+        val source = Source.CACHE
         firestoreDB.collection("usersDetails")
             .document(userID)
-            .get()
+            .get(source)
             .addOnSuccessListener { result ->
                 val userName = result.getString(dataName).toString()
                 callback(userName)  // Use the callback to return the result

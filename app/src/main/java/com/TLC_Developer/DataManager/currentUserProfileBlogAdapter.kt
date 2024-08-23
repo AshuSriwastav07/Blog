@@ -2,8 +2,11 @@ package com.TLC_Developer.DataManager
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.os.Handler
+import android.os.Looper
 import android.text.format.DateUtils
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,19 +15,24 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.Post.EditBlogActivity
 import com.TLC_Developer.Post.R
 import com.TLC_Developer.Post.readBlogPageActivity
 import com.TLC_Developer.functions.function
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import kotlin.collections.ArrayList
+import kotlin.math.truncate
 
 // Adapter class for displaying blogs in the user's profile
 class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
@@ -37,6 +45,9 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
         val blogTitle: TextView = view.findViewById(R.id.currentUser_ProfileBlogTitle)
         val blogDateAndTime: TextView = view.findViewById(R.id.currentUser_ProfileBlogDateTime)
         val blogEditAndReadButton: ImageButton = view.findViewById(R.id.currentUser_BlogEditButton)
+        val blogDeleteButton: ImageButton = view.findViewById(R.id.currentUser_BlogDeleteButton)
+        val BGImage:ImageView=view.findViewById(R.id.profileVersionBlogImageView)
+        val completeLayout:CardView=view.findViewById(R.id.profileBlogListCompleteLayoutCardView)
 
         // Optional views commented out as they are not used
 
@@ -71,6 +82,12 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
             .placeholder(R.mipmap.profileicon)
             .into(viewHolder.userProfileImage)
 
+        Picasso.get()
+            .load(blog.BlogImageURL)
+            .error(R.mipmap.noimage)
+            .placeholder(R.mipmap.noimage)
+            .into(viewHolder.BGImage)
+
         // if current user is on profile or other user
         val user = Firebase.auth.currentUser
         val context=viewHolder.itemView.context
@@ -79,10 +96,38 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
             blog.BlogDateAndTime,
             blog.BlogImageURL,
             blog.BlogBody,
+            blog.BlogUserProfileUrl
         )
         function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
             dataForReadingBlog.add(userName)
 //            Log.d("BlogAdapterLogs",userName)
+        }
+
+
+        //show buttons on ling click
+        viewHolder.completeLayout.setOnLongClickListener{
+            if(user?.uid.toString()==blog.BlogUserID) {
+                viewHolder.blogDeleteButton.visibility = View.VISIBLE
+                viewHolder.blogEditAndReadButton.visibility = View.VISIBLE
+
+            }else if(user?.uid.toString()!=blog.BlogUserID){
+                viewHolder.blogEditAndReadButton.setImageResource(R.mipmap.read)
+                viewHolder.blogEditAndReadButton.visibility = View.VISIBLE
+            }
+
+            //hide buttons auto
+            Handler(Looper.getMainLooper()).postDelayed({
+                viewHolder.blogDeleteButton.visibility = View.GONE
+                viewHolder.blogEditAndReadButton.visibility = View.GONE
+            }, 30000)
+
+            true
+        }
+
+
+        //Delete The Blog
+        viewHolder.blogDeleteButton.setOnClickListener{
+            showDeleteConfirmationDialog(context,blog.BlogDocumentID,blog.BlogImageURL)
         }
 
 
@@ -134,5 +179,40 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
         intent.putStringArrayListExtra("blogData",blogReadingData)
         context.startActivity(intent)
     }
+
+    fun deleteBlog(documentID:String,imageURL:String,context: Context){
+        val db=FirebaseFirestore.getInstance()
+        val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageURL)
+
+        storageRef.delete()
+            .addOnSuccessListener {
+                db.collection("BlogsData").document(documentID)
+                    .delete()
+                    .addOnSuccessListener { Toast.makeText(context,"Blog Deleted Successfully!",Toast.LENGTH_SHORT).show() }
+                    .addOnFailureListener { e -> Toast.makeText(context,"Blog not Deleted! ${e}",Toast.LENGTH_LONG).show() }
+
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context,"Blog not Deleted! ${e}",Toast.LENGTH_SHORT).show()
+            }
+
+    }
+
+    private fun showDeleteConfirmationDialog(context: Context,documentID:String,imageURL:String) {
+        AlertDialog.Builder(context)
+            .setTitle("Confirm Deletion")
+            .setMessage("Are you sure you want to delete this blog? This action cannot be undone.")
+            .setPositiveButton("Yes") { dialog, _ ->
+                deleteBlog(documentID,imageURL,context) // User confirmed deletion
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                 // User canceled deletion
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
 
 }

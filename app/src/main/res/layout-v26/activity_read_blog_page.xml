@@ -36,6 +36,50 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_80">
+
+                <ImageView
+                    android:id="@+id/BlogReading_ImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_70"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:layout_marginEnd="2dp"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/blogWriterMiniProfileCardview"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginBottom="@dimen/dp_2"
+                    android:layout_weight="0"
+                    app:cardCornerRadius="@dimen/dp_12"
+                    app:cardElevation="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:id="@+id/readBlogUserProfileImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="3dp"
+                        android:layout_weight="0"
+                        android:scaleX="1.3"
+                        android:scaleY="1.3"
+                        tools:srcCompat="@tools:sample/avatars" />
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:id="@+id/BlogReading_Title"
                 android:layout_width="match_parent"
@@ -61,9 +105,12 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginEnd="2dp"
                     android:layout_marginBottom="6dp"
+                    android:fontFamily="@font/merriweather_sans_medium"
                     android:paddingEnd="10dp"
                     android:text="@string/user_name"
+                    android:textAlignment="textStart"
                     android:textSize="@dimen/dp_6"
+                    android:textStyle="bold|italic"
                     tools:ignore="TextSizeCheck" />
 
                 <TextView
@@ -74,21 +121,13 @@
                     android:layout_marginTop="3dp"
                     android:layout_marginEnd="2dp"
                     android:layout_marginBottom="6dp"
+                    android:fontFamily="@font/merriweather_sans_medium"
                     android:text="@string/datetime"
+                    android:textAlignment="textStart"
                     android:textSize="@dimen/dp_6"
+                    android:textStyle="bold|italic"
                     tools:ignore="TextSizeCheck" />
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/BlogReading_ImageView"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_80"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="6dp"
-                android:scaleType="centerInside"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <TextView
                 android:id="@+id/BlogReading_Body"

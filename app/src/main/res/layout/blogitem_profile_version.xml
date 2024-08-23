@@ -7,6 +7,7 @@
     android:layout_height="wrap_content">
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/profileBlogListCompleteLayoutCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp_4"
@@ -48,11 +49,28 @@
                     android:layout_marginStart="@dimen/dp_4"
                     android:layout_marginTop="@dimen/dp_3"
                     android:layout_marginEnd="@dimen/dp_4"
-                    android:layout_weight="1.2"
+                    android:layout_weight="0.5"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/imageButtons"
-                    app:srcCompat="@drawable/baseline_chevron_right_24"
+                    android:cropToPadding="false"
+                    android:visibility="gone"
+                    app:srcCompat="@mipmap/edit"
                     tools:ignore="TouchTargetSizeCheck" />
+
+                <ImageButton
+                    android:id="@+id/currentUser_BlogDeleteButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_12"
+                    android:layout_marginStart="@dimen/dp_4"
+                    android:layout_marginTop="@dimen/dp_3"
+                    android:layout_marginEnd="@dimen/dp_4"
+                    android:layout_weight="0.5"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/imageButtons"
+                    android:visibility="gone"
+                    app:srcCompat="@mipmap/delete"
+                    tools:ignore="TouchTargetSizeCheck" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -113,6 +131,15 @@
                 android:layout_marginBottom="@dimen/dp_4"
                 android:text="title"
                 android:textSize="@dimen/dp_7" />
+
+            <ImageView
+                android:id="@+id/profileVersionBlogImageView"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_marginHorizontal="@dimen/dp_4"
+                android:layout_marginBottom="@dimen/dp_2"
+                android:scaleType="centerCrop"
+                tools:srcCompat="@tools:sample/backgrounds/scenic" />
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

@@ -65,6 +65,7 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
             blog.BlogDateAndTime,
             blog.BlogImageURL,
             blog.BlogBody,
+            blog.BlogUserProfileUrl
         )
 
         //Add Specific Blog writer name in readDataSet
