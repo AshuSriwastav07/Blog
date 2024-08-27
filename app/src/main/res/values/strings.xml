@@ -23,6 +23,11 @@
     <string name="datetime">DateTime</string>
     <string name="blog_body">Blog Body</string>
     <string name="loading">Loading...</string>
+    <string name="no_blog_available_write_your_1st_blog">No Blog Available, Write Your 1st Blog</string>
+    <string name="bg_image">BG Image</string>
+    <string name="profileimage">ProfileImage</string>
+    <string name="email">Email</string>
+    <string name="comment_here">Comment Here</string>
 
 
 </resources>

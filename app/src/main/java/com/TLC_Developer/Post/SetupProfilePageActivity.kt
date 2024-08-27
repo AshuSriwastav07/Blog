@@ -6,7 +6,6 @@ import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.TLC_Developer.functions.function
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -25,6 +24,14 @@ class SetupProfilePageActivity : AppCompatActivity() {
     private lateinit var YouTubeEditText: TextInputEditText
     private lateinit var saveProfileButton: Button
 
+    //Pre-filed data and no Empty
+
+    private lateinit var lastUserName:String
+    private lateinit var lastInstagramLink:String
+    private lateinit var lastFBLink:String
+    private lateinit var lastXLink:String
+    private lateinit var lastYTLink:String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setup_profile_page)
@@ -32,8 +39,8 @@ class SetupProfilePageActivity : AppCompatActivity() {
         // Initialize Firebase
         firebaseFireStore = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
-        val currentUserID = auth.currentUser?.uid.toString()
-        val userProfileUrl=auth.currentUser?.photoUrl
+        val documentName = auth.currentUser?.email ?: return  // User email as document name
+        val userProfileUrl = auth.currentUser?.photoUrl
 
         // Initialize UI items
         userNameEditText = findViewById(R.id.profileSetupEnterUserName)
@@ -43,72 +50,68 @@ class SetupProfilePageActivity : AppCompatActivity() {
         YouTubeEditText = findViewById(R.id.profileSetupEnterYTLink)
         saveProfileButton = findViewById(R.id.saveProfileButton)
 
-        // Set Data in Edit Texts
-        function().getUserSpecificData(currentUserID,"userName") { userName ->
-            userNameEditText.setText(userName)
-        }
 
-        // Fetch existing profile data
-        firebaseFireStore.collection("usersDetails").document(currentUserID)
+        //Check and Fill Profile Data
+        // Check if fields are empty and if so, retain the previous data
+        firebaseFireStore.collection("usersDetails").document(documentName)
             .get()
             .addOnSuccessListener { document ->
-                if (document.exists()) {
-                    // Populate the EditTexts with existing data
-                    InstagramURLEditText.setText(document.getString("InstagramLink"))
-                    FacebookEditText.setText(document.getString("FacebookLink"))
-                    XEditText.setText(document.getString("XLink"))
-                    YouTubeEditText.setText(document.getString("YoutubeLink"))
-                }
+
+                lastUserName=document.getString("userName").toString()
+                lastInstagramLink=document.getString("InstagramLink").toString()
+                lastFBLink=document.getString("FacebookLink").toString()
+                lastXLink=document.getString("XLink").toString()
+                lastYTLink=document.getString("YoutubeLink").toString()
+
+
+                userNameEditText.setText(lastUserName)
+                InstagramURLEditText.setText(lastInstagramLink)
+                FacebookEditText.setText(lastFBLink)
+                XEditText.setText(lastXLink)
+                YouTubeEditText.setText(lastYTLink)
+
             }
-            .addOnFailureListener { e ->
-                Log.d(TAG, "Error fetching profile data: ", e)
-            }
+
 
         // Save profile button click listener
         saveProfileButton.setOnClickListener {
-            val userName = userNameEditText.text.toString()
-            var instaUrl = InstagramURLEditText.text.toString()
-            var facebookUrl = FacebookEditText.text.toString()
-            var xUrl = XEditText.text.toString()
-            var ytUrl = YouTubeEditText.text.toString()
 
-            // Check if fields are empty and if so, retain the previous data
-            firebaseFireStore.collection("usersDetails").document(currentUserID)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document.exists()) {
-                        if (instaUrl.isEmpty()) {
-                            instaUrl = document.getString("InstagramLink").orEmpty()
-                        }
-                        if (facebookUrl.isEmpty()) {
-                            facebookUrl = document.getString("FacebookLink").orEmpty()
-                        }
-                        if (xUrl.isEmpty()) {
-                            xUrl = document.getString("XLink").orEmpty()
-                        }
-                        if (ytUrl.isEmpty()) {
-                            ytUrl = document.getString("YoutubeLink").orEmpty()
-                        }
+            val userName = if (userNameEditText.text.toString().isEmpty()) lastUserName else userNameEditText.text.toString()
+            val instaUrl = InstagramURLEditText.text.toString()
+            val facebookUrl = FacebookEditText.text.toString()
+            val xUrl = XEditText.text.toString()
+            val ytUrl = YouTubeEditText.text.toString()
 
-                        // Create a map to store profile data
-                        val profileData = hashMapOf(
-                            "userName" to userName,
-                            "InstagramLink" to instaUrl,
-                            "FacebookLink" to facebookUrl,
-                            "XLink" to xUrl,
-                            "YoutubeLink" to ytUrl,
-                            "ProfileSetupStatus" to "Done",
-                            "UserprofileUrl" to userProfileUrl
-                        )
-
-                        // Update the user's profile data in Firestore
-
-                        function().UpdateUserName(userName)
-
-                        firebaseFireStore.collection("usersDetails").document(currentUserID)
-                            .set(profileData)
+                        // Update the user's profile data
+                        firebaseFireStore.collection("usersDetails").document(documentName)
+                            .update(
+                                "userName", userName,
+                                "InstagramLink", instaUrl,
+                                "FacebookLink", facebookUrl,
+                                "XLink", xUrl,
+                                "YoutubeLink", ytUrl,
+                                "ProfileSetupStatus", "Done",
+                                "UserprofileUrl", userProfileUrl.toString()
+                            )
                             .addOnSuccessListener {
-                                Toast.makeText(this, "Profile is Complete", Toast.LENGTH_LONG).show()
+
+                                val intent = Intent(this, MainActivity::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
+                            .addOnFailureListener { e ->
+                                Log.d(TAG, "Error saving profile data: ", e)
+                            }
+
+            // Update the user's profile data
+            firebaseFireStore.collection("BlogsData").whereEqualTo("userID", documentName)
+                .get() // Fetch the documents matching the query
+                .addOnSuccessListener { documents ->
+                    for (document in documents) {
+                        // Update each document individually
+                        firebaseFireStore.collection("BlogsData").document(document.id)
+                            .update("userName", userName)
+                            .addOnSuccessListener {
                                 // Navigate to MainActivity after completing the profile
                                 val intent = Intent(this, MainActivity::class.java)
                                 startActivity(intent)
@@ -117,14 +120,18 @@ class SetupProfilePageActivity : AppCompatActivity() {
                             .addOnFailureListener { e ->
                                 Log.d(TAG, "Error saving profile data: ", e)
                             }
+
                     }
+
+                    Toast.makeText(this, "Profile is Complete", Toast.LENGTH_LONG).show()
+
                 }
+
                 .addOnFailureListener { e ->
-                    Log.d(TAG, "Error fetching profile data: ", e)
+                    Log.d(TAG, "Error fetching documents: ", e)
                 }
-
-
 
         }
     }
 }
+

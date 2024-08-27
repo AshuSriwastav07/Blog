@@ -4,7 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
+import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
@@ -33,8 +33,6 @@ class SignupAndLoginPage : AppCompatActivity() {
     // FirebaseAuth instance for handling authentication
     private lateinit var auth: FirebaseAuth
 
-    //firestore
-    private val db=FirebaseFirestore.getInstance()
 
     // One Tap client for Google Sign-In
     private var oneTapClient: SignInClient? = null
@@ -119,7 +117,7 @@ class SignupAndLoginPage : AppCompatActivity() {
 
             } catch (e: ApiException) {
                 // Handle API exceptions during the sign-in process
-                Toast.makeText(this@SignupAndLoginPage, "Sign-in failed: ${e.statusCode}", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@SignupAndLoginPage, "Sign-in failed: ${e.message}", Toast.LENGTH_LONG).show()
                 e.printStackTrace()
             } catch (e: Exception) {
                 // Handle any other exceptions
@@ -144,13 +142,17 @@ class SignupAndLoginPage : AppCompatActivity() {
                     if (idToken != null) {
                         // Use the ID token to authenticate with Firebase
                         val firebaseCredentials = GoogleAuthProvider.getCredential(idToken, null)
-
+                        binding.loginProcessProgressBar.visibility= View.VISIBLE
                         auth.signInWithCredential(firebaseCredentials)
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     // Sign-in success, proceed to the main activity
                                     Toast.makeText(this, "Sign-In Complete", Toast.LENGTH_LONG).show()
-                                    LoginUser() // Navigate to the main activity
+                                    // Navigate to the main activity
+                                    val intent= Intent(this,MainActivity::class.java)
+                                    startActivity(intent)
+                                    finish()
+
                                 } else {
                                     // Handle sign-in failure
                                     Toast.makeText(this, "Sign-In Failed", Toast.LENGTH_LONG).show()
@@ -160,18 +162,6 @@ class SignupAndLoginPage : AppCompatActivity() {
                                     }
                                 }
                             }
-                            .addOnFailureListener { exception ->
-                                // Handle sign-in failure
-                                Toast.makeText(this, "Sign-In Failed: ${exception.message}", Toast.LENGTH_LONG).show()
-                                exception.printStackTrace()
-                            }
-                            .addOnCanceledListener {
-                                // Handle sign-in cancellation
-                                Toast.makeText(this, "Sign-In Cancelled", Toast.LENGTH_LONG).show()
-                            }
-                    } else {
-                        // No ID token found
-                        Toast.makeText(this, "No ID token found.", Toast.LENGTH_LONG).show()
                     }
 
                 } catch (e: ApiException) {
@@ -179,9 +169,6 @@ class SignupAndLoginPage : AppCompatActivity() {
                     Toast.makeText(this, "Error in sign-in process: ${e.message}", Toast.LENGTH_LONG).show()
                     e.printStackTrace()
                 }
-            } else {
-                // Handle cases where the sign-in result is not OK
-                Toast.makeText(this, "Sign-In Result Not OK", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -192,14 +179,9 @@ class SignupAndLoginPage : AppCompatActivity() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
             // If the user is signed in, navigate to the main activity
-            LoginUser()
+            val intent= Intent(this,MainActivity::class.java)
+            startActivity(intent)
         }
     }
 
-    // Function to navigate to the MainActivity after successful sign-in
-    private fun LoginUser() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-        finish() // Finish current activity to prevent going back to the login screen
-    }
 }

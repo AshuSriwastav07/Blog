@@ -1,7 +1,6 @@
 package com.TLC_Developer.DataManager
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
@@ -21,18 +20,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.Post.EditBlogActivity
 import com.TLC_Developer.Post.R
 import com.TLC_Developer.Post.readBlogPageActivity
-import com.TLC_Developer.functions.function
+import com.TLC_Developer.functions.functionsManager
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
-import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.collections.ArrayList
-import kotlin.math.truncate
 
 // Adapter class for displaying blogs in the user's profile
 class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
@@ -64,29 +59,21 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
     // Bind data to the ViewHolder
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Get the blog data for the current position
+
         val blog = blogDataSet[position]
 
         // Set the blog title and writer's name
-        function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
-            viewHolder.userName.text = userName
-//            Log.d("functionLogs", userName.toString())
-        }
+            viewHolder.userName.text = blog.BlogTags
 
         viewHolder.blogTitle.text = blog.BlogTitle
         // Format and set the date and time
         stringToDate(blog.BlogDateAndTime, viewHolder)
-        // Load the user's profile image using Picasso
-        Picasso.get()
-            .load(blog.BlogUserProfileUrl)
-            .error(R.mipmap.profileicon)
-            .placeholder(R.mipmap.profileicon)
-            .into(viewHolder.userProfileImage)
 
-        Picasso.get()
-            .load(blog.BlogImageURL)
-            .error(R.mipmap.noimage)
-            .placeholder(R.mipmap.noimage)
-            .into(viewHolder.BGImage)
+        // Load the user's profile image using Picasso
+        Log.d("profileImageData",blog.BlogUserProfileUrl)
+
+        functionsManager().loadProfileImagesImage(blog.BlogUserProfileUrl,viewHolder.userProfileImage)
+        functionsManager().loadBlogImagesImage(blog.BlogImageURL,viewHolder.BGImage)
 
         // if current user is on profile or other user
         val user = Firebase.auth.currentUser
@@ -96,21 +83,20 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
             blog.BlogDateAndTime,
             blog.BlogImageURL,
             blog.BlogBody,
-            blog.BlogUserProfileUrl
+            blog.BlogUserProfileUrl,
+            blog.BlogUserName
+
         )
-        function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
-            dataForReadingBlog.add(userName)
-//            Log.d("BlogAdapterLogs",userName)
-        }
+
 
 
         //show buttons on ling click
         viewHolder.completeLayout.setOnLongClickListener{
-            if(user?.uid.toString()==blog.BlogUserID) {
+            if(user?.email.toString()==blog.BlogUserID) {
                 viewHolder.blogDeleteButton.visibility = View.VISIBLE
                 viewHolder.blogEditAndReadButton.visibility = View.VISIBLE
 
-            }else if(user?.uid.toString()!=blog.BlogUserID){
+            }else if(user?.email.toString()!=blog.BlogUserID){
                 viewHolder.blogEditAndReadButton.setImageResource(R.mipmap.read)
                 viewHolder.blogEditAndReadButton.visibility = View.VISIBLE
             }
@@ -132,9 +118,9 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
 
 
         viewHolder.blogEditAndReadButton.setOnClickListener {
-            if(user?.uid.toString()!=blog.BlogUserID){
+            if(user?.email.toString()!=blog.BlogUserID){
                 readBlog(context,dataForReadingBlog)
-            }else if(user?.uid.toString()==blog.BlogUserID) {
+            }else if(user?.email.toString()==blog.BlogUserID) {
                 openBlogToEdit(blog.BlogDocumentID, viewHolder)
             }
         }
@@ -182,8 +168,15 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
 
     fun deleteBlog(documentID:String,imageURL:String,context: Context){
         val db=FirebaseFirestore.getInstance()
-        val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageURL)
 
+        //Image url is empty so delete only blog data
+        if(!imageURL.contains("https://firebasestorage.googleapis.com")){
+            db.collection("BlogsData").document(documentID)
+                .delete()
+                .addOnSuccessListener { Toast.makeText(context,"Blog Deleted Successfully!",Toast.LENGTH_SHORT).show() }
+                .addOnFailureListener { e -> Toast.makeText(context,"Blog not Deleted! ${e}",Toast.LENGTH_LONG).show() }
+        }else{  //Image url is not empty so delete only blog data and user uploaded image from RTDB
+        val storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(imageURL)
         storageRef.delete()
             .addOnSuccessListener {
                 db.collection("BlogsData").document(documentID)
@@ -196,6 +189,7 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
                 Toast.makeText(context,"Blog not Deleted! ${e}",Toast.LENGTH_SHORT).show()
             }
 
+     }
     }
 
     private fun showDeleteConfirmationDialog(context: Context,documentID:String,imageURL:String) {

@@ -30,10 +30,23 @@ class WriteBlogPage : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityWriteBlogPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        firebaseFirestore = FirebaseFirestore.getInstance()
 
         // Get the current user's information
-        val userID = FirebaseAuth.getInstance().currentUser?.uid.toString()
+        val userID = FirebaseAuth.getInstance().currentUser?.email.toString()
         val profilePictureUrl = FirebaseAuth.getInstance().currentUser?.photoUrl.toString()
+        var blogWriterName:String= FirebaseAuth.getInstance().currentUser?.displayName.toString()
+
+        //getUserName from userData Collections
+
+        val docRef = firebaseFirestore.collection("usersDetails").document(userID)
+        docRef.get()
+            .addOnSuccessListener { document ->
+                blogWriterName= document.getString("userName").toString()
+            }
+            .addOnFailureListener { exception ->
+                Log.d("functionManagerLogs-showDataInOnlyViewProfile",exception.toString())
+            }
 
         // Initialize views and Firebase
         val TitleTextView: EditText = findViewById(R.id.BlogTitleEditText)
@@ -58,7 +71,8 @@ class WriteBlogPage : AppCompatActivity() {
                 "tags" to tags,
                 "userID" to userID,
                 "BlogDateAndTime" to currentDate,
-                "BlogUserProfileUrl" to profilePictureUrl
+                "BlogUserProfileUrl" to profilePictureUrl,
+                "userName" to blogWriterName
             )
 
             // Call the function to upload the blog data
@@ -88,7 +102,6 @@ class WriteBlogPage : AppCompatActivity() {
 
     // Function to upload blog data (including handling image upload if applicable)
     private fun uploadBlogData(blogData: HashMap<String, Any>) {
-        val databaseRef = firebaseFirestore
 
         // Check if an image was selected
         if (imageUri != null) {

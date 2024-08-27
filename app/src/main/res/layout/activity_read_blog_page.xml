@@ -17,6 +17,7 @@
         android:fontFamily="@font/acme"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/dp_5"
+        android:paddingEnd="0dp"
         android:text="@string/AppName"
         android:textSize="@dimen/dp_12"
         app:layout_constraintEnd_toEndOf="parent"
@@ -36,14 +37,60 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_80">
+
+                <ImageView
+                    android:id="@+id/BlogReading_ImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_70"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="@dimen/dp_4"
+                    android:layout_marginEnd="2dp"
+                    android:contentDescription="@string/bg_image"
+                    android:scaleType="centerCrop"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:srcCompat="@tools:sample/backgrounds/scenic"
+                    tools:ignore="ContentDescription" />
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/blogWriterMiniProfileCardview"
+                    android:layout_width="@dimen/dp_20"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="@dimen/dp_10"
+                    android:layout_marginBottom="@dimen/dp_2"
+                    android:layout_weight="0"
+                    app:cardCornerRadius="@dimen/dp_12"
+                    app:cardElevation="4dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:id="@+id/readBlogUserProfileImage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="3dp"
+                        android:layout_weight="0"
+                        android:scaleX="1.3"
+                        android:scaleY="1.3"
+                        tools:srcCompat="@tools:sample/avatars"
+                        tools:ignore="ContentDescription" />
+                </androidx.cardview.widget.CardView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
             <TextView
                 android:id="@+id/BlogReading_Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
+                android:layout_marginStart="@dimen/dp_3"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="2dp"
-                android:layout_marginBottom="6dp"
                 android:fontFamily="@font/merriweather_sans_medium"
                 android:text="@string/title"
                 android:textSize="@dimen/dp_9" />
@@ -55,41 +102,34 @@
 
                 <TextView
                     android:id="@+id/BlogReading_writerName"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="3dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginEnd="2dp"
                     android:layout_marginBottom="6dp"
-                    android:layout_weight="1"
+                    android:fontFamily="@font/merriweather_sans_medium"
+                    android:paddingStart="0sp"
+                    android:paddingEnd="10dp"
                     android:text="@string/user_name"
+                    android:textAlignment="textStart"
                     android:textSize="@dimen/dp_6"
+                    android:textStyle="bold"
                     tools:ignore="TextSizeCheck" />
 
                 <TextView
                     android:id="@+id/BlogReading_DateTime"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
-                    android:layout_marginTop="3dp"
                     android:layout_marginEnd="2dp"
                     android:layout_marginBottom="6dp"
-                    android:layout_weight="1"
+                    android:fontFamily="@font/merriweather_sans_medium"
                     android:text="@string/datetime"
+                    android:textAlignment="textStart"
                     android:textSize="@dimen/dp_6"
+                    android:textStyle="bold|italic"
                     tools:ignore="TextSizeCheck" />
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/BlogReading_ImageView"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/dp_80"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="3dp"
-                android:layout_marginEnd="2dp"
-                android:layout_marginBottom="6dp"
-                android:scaleType="centerInside"
-                tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
             <TextView
                 android:id="@+id/BlogReading_Body"
@@ -99,9 +139,9 @@
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="@dimen/dp_3"
                 android:layout_marginBottom="6dp"
-                android:fontFamily="@font/merriweather_light"
-                android:text="@string/blog_body"
+                android:fontFamily="sans-serif"
                 android:justificationMode="inter_word"
+                android:text="@string/blog_body"
                 android:textSize="@dimen/dp_7" />
         </LinearLayout>
     </ScrollView>

@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.DataManager.DataClass
 import com.TLC_Developer.DataManager.currentUserProfileBlogAdapter
-import com.TLC_Developer.functions.function
+import com.TLC_Developer.functions.functionsManager
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
@@ -25,12 +25,12 @@ class OnlyViewProfilePage : AppCompatActivity() {
     private lateinit var blogRecyclerView: RecyclerView
     private lateinit var recyclerViewAdapter: currentUserProfileBlogAdapter
     // Function instance for additional operations
-    private val functionCalls = function()
+    private val functionCalls = functionsManager()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_only_view_profile_page)
-        val openedUserProfileID=intent?.extras?.getString("OpenedProfileUserId").toString()
+        val showUserProfileData=intent?.extras?.getString("OpenedProfileUserId").toString()
 
         val userName=findViewById<TextView>(R.id.ViewProfilePageUserName)
         val instagramButton:ImageButton=findViewById(R.id.ViewProfileInstaButton)
@@ -40,9 +40,13 @@ class OnlyViewProfilePage : AppCompatActivity() {
 
         val profileImageImageView: ImageView = findViewById(R.id.ViewProfilePageProfileImage)
 
-        functionCalls.getAndSetUserDetails(db,openedUserProfileID,userName,profileImageImageView)
+        /*       functionCalls.getAndSetUserDetails(db,openedUserProfileID,userName,profileImageImageView)
         functionCalls.socialMediaLinks(this,db,openedUserProfileID,instagramButton,FBButton,XButton,YTButton)
-//        Log.d("FireaseuserID",openedUserProfileID)
+//        Log.d("FireaseuserID",openedUserProfileID)*/
+
+        //call function to show data in upper profile
+
+        functionCalls.showDataInOnlyViewProfile(this,showUserProfileData,profileImageImageView,userName,instagramButton,YTButton,XButton,FBButton)
 
     }
 
@@ -86,7 +90,8 @@ class OnlyViewProfilePage : AppCompatActivity() {
                         blogDateAndTime = document.getString("BlogDateAndTime") ?: "",
                         blogImageURL = document.getString("BlogImageURL") ?: "",
                         blogUserProfileUrl = document.getString("BlogUserProfileUrl") ?: "",
-                        blogDocumentID = document.id
+                        blogDocumentID = document.id,
+                        BlogUserName=document.getString("userName") ?: ""
                     )
                     userBlogListData.add(dataModel)  // Add data to ArrayList
 

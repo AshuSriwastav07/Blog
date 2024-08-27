@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.text.format.DateUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +13,7 @@ import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.Post.R
 import com.TLC_Developer.Post.readBlogPageActivity
-import com.TLC_Developer.functions.function
-import com.squareup.picasso.Picasso
+import com.TLC_Developer.functions.functionsManager
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -52,50 +50,35 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
         // Set the blog title and writer's name
         viewHolder.blogTitle.text = blog.BlogTitle
 
-        //get and Set User name for each Item
-        function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
-            viewHolder.userName.text = userName
-//            Log.d("functionLogs", userName.toString())
-        }
-
-        viewHolder.blogTags.text = blog.BlogTags
-
-        val dataForReadingBlog:java.util.ArrayList<String> = arrayListOf(
+        val dataForReadingBlog:ArrayList<String> = arrayListOf(
             blog.BlogTitle,
             blog.BlogDateAndTime,
             blog.BlogImageURL,
             blog.BlogBody,
-            blog.BlogUserProfileUrl
+            blog.BlogUserProfileUrl,
+            blog.BlogUserName,
+            blog.BlogDocumentID
         )
 
-        //Add Specific Blog writer name in readDataSet
-        function().getUserSpecificData(blog.BlogUserID,"userName") { userName ->
-            dataForReadingBlog.add(userName)
-//            Log.d("BlogAdapterLogs",userName)
-        }
+        //get and Set User name for each Item
+            viewHolder.userName.text=blog.BlogUserName
+
+
+        viewHolder.blogTags.text = blog.BlogTags
 
 
         // Format and set the date and time
         stringToDate(blog.BlogDateAndTime, viewHolder)
 
         // Load the blog's background image and user's profile image using Picasso
-        if(blog.BlogImageURL==""){
-            Picasso.get().load("https://cdn.vectorstock.com/i/500p/82/99/no-image-available-like-missing-picture-vector-43938299.jpg").into(viewHolder.blogBgImageView)
-
-        }else{
-            Picasso.get().load(blog.BlogImageURL).into(viewHolder.blogBgImageView)
-        }
+        functionsManager().loadBlogImagesImage(blog.BlogImageURL,viewHolder.blogBgImageView)
 
         //load Profile Image
-        Picasso.get()
-            .load(blog.BlogUserProfileUrl)
-            .error(R.mipmap.profileicon)
-            .placeholder(R.mipmap.profileicon)
-            .into(viewHolder.userProfileImage)
+        functionsManager().loadProfileImagesImage(blog.BlogUserProfileUrl,viewHolder.userProfileImage)
 
         //Open specific use profile
         viewHolder.blogWriterMiniProfileCardView.setOnClickListener {
-            function().openProfileSection(blog.BlogUserID,context)
+            functionsManager().openProfile(context,blog.BlogUserID)
         }
 
         //Open Blog for Reading
@@ -117,20 +100,26 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
     // Format the date and time to a readable format
     @SuppressLint("SetTextI18n")
     private fun stringToDate(dateString: String, viewHolder: ViewHolder) {
-        // Define the date format used in the blog's date string
-        val formatter = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
+        // Define the original date format used in the blog's date string
+        val originalFormat = SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
         // Parse the date string to a Date object
-        val publishDate: Date = formatter.parse(dateString) ?: Date()
+        val publishDate: Date = originalFormat.parse(dateString) ?: Date()
         // Calculate the time difference between now and the publication date
         val diff = System.currentTimeMillis() - publishDate.time
+
+        // Define the new date format with AM/PM
+        val newFormat = SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault())
+        // Format the publishDate to the new format
+        val formattedDate = newFormat.format(publishDate)
 
         // Set the appropriate text based on the time difference
         viewHolder.blogDateAndTime.text = when {
             diff < DateUtils.DAY_IN_MILLIS -> "Recently" // Less than a day ago
             diff < 2 * DateUtils.DAY_IN_MILLIS -> "Yesterday" // Less than two days ago
-            else -> dateString // Default to the original date string
+            else -> formattedDate // Display the formatted date with AM/PM
         }
     }
+
 
     fun readBlog(context: Context,blogReadingData:ArrayList<String>){
         val intent = Intent(context,readBlogPageActivity::class.java)

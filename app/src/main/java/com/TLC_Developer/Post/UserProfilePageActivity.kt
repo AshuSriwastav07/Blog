@@ -3,18 +3,17 @@ package com.TLC_Developer.Post
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.DataManager.DataClass
 import com.TLC_Developer.DataManager.currentUserProfileBlogAdapter
 import com.TLC_Developer.Post.databinding.ActivityUserProfilePageBinding
-import com.TLC_Developer.functions.function
+import com.TLC_Developer.functions.functionsManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
-import com.squareup.picasso.Picasso
 
 class UserProfilePageActivity : AppCompatActivity() {
 
@@ -23,7 +22,7 @@ class UserProfilePageActivity : AppCompatActivity() {
 
     // Firebase authentication and Firestore instances
     private val firebaseAuth = Firebase.auth.currentUser
-    private val currentUserID = firebaseAuth?.uid.toString()
+    val documentName = firebaseAuth?.email.toString()  // User email as document name
     private var db = Firebase.firestore
 
     // List to store blog data and adapter for RecyclerView
@@ -33,31 +32,11 @@ class UserProfilePageActivity : AppCompatActivity() {
     private lateinit var recyclerViewAdapter: currentUserProfileBlogAdapter
 
     // Function instance for additional operations
-    private val functionCalls = function()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityUserProfilePageBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // Get current user details
-        val currentUserProfileImage = firebaseAuth?.photoUrl.toString()
-        val profileImageImageView: ImageView = findViewById(R.id.ProfilePageProfileImage)
-
-        // Set user details in UI
-        function().getUserSpecificData(currentUserID,"userName") { userName ->
-            binding.ProfilePageUserName.text = userName
-        }
-
-        binding.ProfilePageUserEmail.text = firebaseAuth?.email
-
-
-        // Load user profile image using Picasso
-        Picasso.get()
-            .load(currentUserProfileImage)
-            .error(R.mipmap.profileicon)
-            .placeholder(R.mipmap.profileicon)
-            .into(profileImageImageView)
 
         // Set up RecyclerView for displaying blogs
         blogRecyclerView = findViewById(R.id.currentUserProfileBlogsRecyclerview)
@@ -73,12 +52,18 @@ class UserProfilePageActivity : AppCompatActivity() {
 
 
 
-
     }
 
     override fun onStart() {
         super.onStart()
-        function().socialMediaLinks(this,db,currentUserID,binding.profileInstaImageButton,binding.profileFBImageButton,binding.profileXImageButton,binding.profileYTImageButton)
+
+        val documentName = FirebaseAuth.getInstance().currentUser?.email.toString()
+
+        functionsManager().showDataInOnlyViewProfile(this,documentName,binding.ProfilePageProfileImage,binding.ProfilePageUserName,binding.profileInstaImageButton,binding.profileFBImageButton,binding.profileXImageButton,binding.profileYTImageButton)
+
+
+        //setEmail
+        binding.ProfilePageUserEmail.text=documentName
 
         // Load blog data for the current user
         userProfileBlogData()
@@ -87,16 +72,19 @@ class UserProfilePageActivity : AppCompatActivity() {
             val intent =Intent(this,SetupProfilePageActivity::class.java)
             startActivity(intent)
         }
+
+
     }
 
 
 
     // Function to load blog data from Firestore for the current user
     private fun userProfileBlogData() {
-        Log.d(TAG, "Current User ID: $currentUserID")  // Log the current user ID
+
+        Log.d(TAG, "Current User ID: $documentName")  // Log the current user ID
 
         db.collection("BlogsData")
-            .whereEqualTo("userID", currentUserID) // Filter blogs by current user's ID
+            .whereEqualTo("userID", documentName) // Filter blogs by current user's ID
             .get()
             .addOnSuccessListener { documents ->
                 Log.d(TAG, "Documents found: ${documents.size()}")  // Log the number of documents found
@@ -111,13 +99,14 @@ class UserProfilePageActivity : AppCompatActivity() {
                         blogDateAndTime = document.getString("BlogDateAndTime") ?: "",
                         blogImageURL = document.getString("BlogImageURL") ?: "",
                         blogUserProfileUrl = document.getString("BlogUserProfileUrl") ?: "",
-                        blogDocumentID = document.id
+                        blogDocumentID = document.id,
+                        BlogUserName = document.getString("userName").toString()
                     )
                     userBlogListData.add(dataModel)  // Add data to ArrayList
 
                     // Sort the blog list by date and time in descending order
                     userBlogListData.sortByDescending {
-                        functionCalls.convertStringToDate(it.BlogDateAndTime)?.time
+                        functionsManager().convertStringToDate(it.BlogDateAndTime)?.time
                     }
                 }
                 recyclerViewAdapter.notifyDataSetChanged() // Notify adapter of data changes

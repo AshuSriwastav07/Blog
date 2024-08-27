@@ -11,11 +11,11 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.TLC_Developer.Post.databinding.ActivityEditBlogBinding
+import com.TLC_Developer.functions.functionsManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
-import com.squareup.picasso.Picasso
 import java.text.SimpleDateFormat
 import java.util.Date
 
@@ -61,7 +61,8 @@ class EditBlogActivity : AppCompatActivity() {
                     bodyTextview.setText(document.getString("body"))
                     tagsTextview.setText(document.getString("tags"))
                     // Load the existing image using Picasso
-                    Picasso.get().load(document.getString("BlogImageURL")).into(imageViewForBG)
+                    functionsManager().loadBlogImagesImage(document.getString("BlogImageURL").toString(),imageViewForBG)
+
                 } else {
                     Log.d(TAG, "No such document")
                 }

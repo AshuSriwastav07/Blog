@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
-    android:background="@color/white"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".readBlogPageActivity">
 
     <TextView
@@ -17,6 +17,7 @@
         android:fontFamily="@font/acme"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/dp_5"
+        android:paddingEnd="0dp"
         android:text="@string/AppName"
         android:textSize="@dimen/dp_12"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,8 +34,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
@@ -47,11 +48,13 @@
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="@dimen/dp_4"
                     android:layout_marginEnd="2dp"
+                    android:contentDescription="@string/bg_image"
                     android:scaleType="centerCrop"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="ContentDescription"
                     tools:srcCompat="@tools:sample/backgrounds/scenic" />
 
                 <androidx.cardview.widget.CardView
@@ -76,6 +79,7 @@
                         android:layout_weight="0"
                         android:scaleX="1.3"
                         android:scaleY="1.3"
+                        tools:ignore="ContentDescription"
                         tools:srcCompat="@tools:sample/avatars" />
                 </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -84,10 +88,9 @@
                 android:id="@+id/BlogReading_Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="2dp"
+                android:layout_marginStart="@dimen/dp_3"
                 android:layout_marginTop="3dp"
                 android:layout_marginEnd="2dp"
-                android:layout_marginBottom="6dp"
                 android:fontFamily="@font/merriweather_sans_medium"
                 android:text="@string/title"
                 android:textSize="@dimen/dp_9" />
@@ -102,15 +105,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="3dp"
                     android:layout_marginEnd="2dp"
                     android:layout_marginBottom="6dp"
                     android:fontFamily="@font/merriweather_sans_medium"
+                    android:paddingStart="0sp"
                     android:paddingEnd="10dp"
                     android:text="@string/user_name"
                     android:textAlignment="textStart"
                     android:textSize="@dimen/dp_6"
-                    android:textStyle="bold|italic"
+                    android:textStyle="bold"
                     tools:ignore="TextSizeCheck" />
 
                 <TextView
@@ -118,7 +121,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
-                    android:layout_marginTop="3dp"
                     android:layout_marginEnd="2dp"
                     android:layout_marginBottom="6dp"
                     android:fontFamily="@font/merriweather_sans_medium"
@@ -141,6 +143,43 @@
                 android:justificationMode="inter_word"
                 android:text="@string/blog_body"
                 android:textSize="@dimen/dp_7" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/dp_3"
+                android:layout_marginTop="@dimen/dp_7"
+                android:layout_marginEnd="0dp"
+                android:layout_marginRight="@dimen/dp_2"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comment_here"
+                    android:textSize="@dimen/dp_8" />
+
+                <EditText
+                    android:id="@+id/editTextText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Comment"
+                    android:inputType="text" />
+
+                <Button
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:backgroundTint="#B8B4B4"
+                    android:text="Submit"
+                    android:textColor="#000000" />
+
+                <ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 
