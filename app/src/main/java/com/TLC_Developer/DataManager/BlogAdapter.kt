@@ -57,7 +57,8 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
             blog.BlogBody,
             blog.BlogUserProfileUrl,
             blog.BlogUserName,
-            blog.BlogDocumentID
+            blog.BlogDocumentID,
+            blog.BlogUserID
         )
 
         //get and Set User name for each Item

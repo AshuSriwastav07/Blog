@@ -17,6 +17,7 @@ import com.TLC_Developer.Post.OnlyViewProfilePage
 import com.TLC_Developer.Post.R
 import com.TLC_Developer.Post.UserProfilePageActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -166,10 +167,11 @@ class functionsManager {
         blogReadDocumentID: String,
         listview: ListView,
         enterCommentTextBox: EditText,
-        submitButton: Button
+        submitButton: Button,
+        userName:String
     ) {
-        var commentsList: ArrayList<String> = arrayListOf()
-        var arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
+        val commentsList: ArrayList<String> = arrayListOf()
+        val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
             context,
             android.R.layout.simple_list_item_1, commentsList
         )
@@ -205,7 +207,7 @@ class functionsManager {
 
         // Handle adding new comments
         submitButton.setOnClickListener {
-            addComments(context, enterCommentTextBox, blogReadDocumentID, commentsList)
+            addComments(context, enterCommentTextBox, blogReadDocumentID, commentsList,userName)
         }
     }
 
@@ -214,14 +216,15 @@ class functionsManager {
         context: Context,
         typedComment: EditText,
         blogDocumentId: String,
-        allPreviousComments: ArrayList<String>
+        allPreviousComments: ArrayList<String>,
+        commentUserName:String
     ) {
         val comment: String = typedComment.text.toString()
-        allPreviousComments.add(comment)
+        allPreviousComments.add("$comment by $commentUserName")
         Log.d("commentsList", typedComment.text.toString())
 
         FirebaseFirestore.getInstance().collection("BlogsData").document(blogDocumentId)
-            .update("comments", allPreviousComments)
+            .update("comments", FieldValue.arrayUnion("$comment by $commentUserName"))
             .addOnSuccessListener {
                 Toast.makeText(context, "Comment Done", Toast.LENGTH_LONG).show()
             }
@@ -232,26 +235,46 @@ class functionsManager {
 
     }
 
-    fun totalLiked(context: Context, blogDocumentId: String, totalLikesShow: TextView) {
+    fun countCommentAndLikes(context: Context, blogDocumentId: String, totalLikesShow: TextView,totalComments:TextView) {
+        val commentList: ArrayList<String> = arrayListOf()
+        val likesList: ArrayList<String> = arrayListOf()
 
         FirebaseFirestore.getInstance().collection("BlogsData").document(blogDocumentId)
-            .get()
-            .addOnSuccessListener { document ->
-                val totalLikesOnBlog=document.getString("likes").toString()
-                totalLikesShow.text=totalLikesOnBlog
+            .addSnapshotListener { document, e ->
+                if (e != null) {
+                    Log.w("commentsList", "Listen failed.", e)
+                    return@addSnapshotListener
+                }
+
+                commentList.clear()
+                likesList.clear()
+
+                commentList.addAll(document?.get("comments") as ArrayList<String>)
+                likesList.addAll(document.get("likedBy") as ArrayList<String>)
+
+                totalLikesShow.text=likesList.size.toString()
+                totalComments.text=commentList.size.toString()
+
+            }
+
+    }
+
+    fun likeTheBlogAndLikedBy(context: Context,blogDocumentId:String,userID:String,likeImageButton: ImageButton){
+
+        FirebaseFirestore.getInstance().collection("BlogsData").document(blogDocumentId)
+            .update("likedBy", FieldValue.arrayUnion(userID))
+            .addOnSuccessListener {
+                Toast.makeText(context, "Post Liked", Toast.LENGTH_LONG).show()
+                likeImageButton.setImageResource(R.mipmap.liked)
             }
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Some Issue Faced", Toast.LENGTH_LONG).show()
 
             }
+
     }
+
 }
 
-
-
-
-//    fun blogLiked(context: Context, likedBy:String,){
-//
-//    }
 
 

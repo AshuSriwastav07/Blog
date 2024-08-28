@@ -22,9 +22,10 @@ class showAndWriteComments : DialogFragment() {
         val commentListView:ListView=view.findViewById(R.id.commentListView)
         val enterComment:EditText=view.findViewById(R.id.typeComment)
         val blogId = arguments?.getString("blogId").toString()
+        val userName = arguments?.getString("blogUserName").toString()
         val submitComment:Button=view.findViewById(R.id.submitComment)
 
-        functionsManager().getComments(requireContext(),blogId,commentListView,enterComment,submitComment)
+        functionsManager().getComments(requireContext(),blogId,commentListView,enterComment,submitComment,userName)
 
         return view
     }
