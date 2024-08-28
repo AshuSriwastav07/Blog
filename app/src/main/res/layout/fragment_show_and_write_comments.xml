@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".showAndWriteComments">
+
+    <LinearLayout
+        android:layout_width="@dimen/dp_150"
+        android:layout_height="@dimen/dp_250"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/dp_4"
+            android:text="@string/comment_here"
+            android:textSize="@dimen/dp_8" />
+
+        <EditText
+            android:id="@+id/typeComment"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginHorizontal="@dimen/dp_4"
+            android:layout_marginTop="@dimen/dp_3"
+            android:layout_marginEnd="@dimen/dp_3"
+            android:ems="10"
+            android:hint="Comment"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/submitComment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="@dimen/dp_4"
+            android:backgroundTint="#B8B4B4"
+            android:text="Submit"
+            android:textColor="#000000" />
+
+        <ListView
+            android:id="@+id/commentListView"
+            style="@android:style/Widget.DeviceDefault.Light.ExpandableListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="@dimen/dp_4"
+            android:layout_marginTop="@dimen/dp_3"
+            android:layout_marginEnd="0dp"
+            android:dividerHeight="3dp"
+            android:paddingTop="10dp" />
+
+    </LinearLayout>
+</FrameLayout>

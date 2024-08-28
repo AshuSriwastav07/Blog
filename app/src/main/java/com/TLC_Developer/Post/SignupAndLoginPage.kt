@@ -33,7 +33,6 @@ class SignupAndLoginPage : AppCompatActivity() {
     // FirebaseAuth instance for handling authentication
     private lateinit var auth: FirebaseAuth
 
-
     // One Tap client for Google Sign-In
     private var oneTapClient: SignInClient? = null
 

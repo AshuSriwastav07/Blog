@@ -2,7 +2,6 @@ package com.TLC_Developer.Post
 
 import android.os.Bundle
 import android.text.Html
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.TLC_Developer.Post.databinding.ActivityReadBlogPageBinding
 import com.TLC_Developer.functions.functionsManager
@@ -20,6 +19,7 @@ class readBlogPageActivity : AppCompatActivity() {
         setContentView(binding.root)
 
 
+
     }
 
     override fun onStart() {
@@ -29,19 +29,34 @@ class readBlogPageActivity : AppCompatActivity() {
 
         // Use binding to access the views and set the data if needed
         if (blogData != null) {
-            binding.BlogReadingTitle.text=blogData.get(0)
-            binding.BlogReadingDateTime.text=blogData.get(1)
+            binding.BlogReadingTitle.text= blogData[0]
+            binding.BlogReadingDateTime.text= blogData[1]
 
-            functionsManager().loadBlogImagesImage(blogData.get(2),binding.BlogReadingImageView)
+            functionsManager().loadBlogImagesImage(blogData[2],binding.BlogReadingImageView)
 
-            val result = Html.fromHtml(blogData.get(3))
+            val result = Html.fromHtml(blogData[3])
             binding.BlogReadingBody.text=result
 
-            binding.BlogReadingWriterName.text=blogData.get(5)
+            binding.BlogReadingWriterName.text= blogData[5]
+            functionsManager().loadProfileImagesImage(blogData[4],binding.readBlogUserProfileImage)
 
-            functionsManager().loadProfileImagesImage(blogData.get(4),binding.readBlogUserProfileImage)
+            binding.commentButton.setOnClickListener {
+                val commentsFragment = showAndWriteComments()
 
-        }
+                // Pass the blog ID to the fragment
+                val bundle = Bundle()
+                bundle.putString("blogId", blogData[6])
+                commentsFragment.arguments = bundle
+
+                commentsFragment.show(supportFragmentManager, "CommentsFragment")
+
+
+            }
+
+//            functionsManager().totalLiked(this, blogData.get(6),binding.countLikes)
+
+
+            }
 
     }
 }

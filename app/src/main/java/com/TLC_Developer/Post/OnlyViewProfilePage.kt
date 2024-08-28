@@ -68,7 +68,6 @@ class OnlyViewProfilePage : AppCompatActivity() {
             adapter = recyclerViewAdapter // Set adapter for RecyclerView
         }
 
-
     }
 
     private fun userProfileBlogData(currentUserID:String) {

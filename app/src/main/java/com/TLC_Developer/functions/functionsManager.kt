@@ -5,8 +5,12 @@ import android.content.Intent
 import android.net.Uri
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import com.TLC_Developer.Post.OnlyViewProfilePage
@@ -66,7 +70,7 @@ class functionsManager {
 
                 val profileUrl = document.getString("UserprofileUrl")
 
-                loadProfileImagesImage(profileUrl.toString(),userProfileImage)
+                loadProfileImagesImage(profileUrl.toString(), userProfileImage)
             }
             .addOnFailureListener { exception ->
                 Log.d("functionManagerLogs-showDataInOnlyViewProfile", exception.toString())
@@ -141,14 +145,15 @@ class functionsManager {
         }
     }
 
-    fun loadProfileImagesImage(imageUrl:String,imageView: ImageView){
+    fun loadProfileImagesImage(imageUrl: String, imageView: ImageView) {
         Picasso.get()
             .load(imageUrl) // Use default image if URL is null
             .placeholder(R.mipmap.profileicon) // Placeholder image while loading
             .error(R.mipmap.profileicon) // Error image if loading fails
             .into(imageView)
     }
-    fun loadBlogImagesImage(imageUrl:String,imageView: ImageView){
+
+    fun loadBlogImagesImage(imageUrl: String, imageView: ImageView) {
         Picasso.get()
             .load(imageUrl) // Use default image if URL is null
             .placeholder(R.mipmap.noimage) // Placeholder image while loading
@@ -156,13 +161,97 @@ class functionsManager {
             .into(imageView)
     }
 
-    fun getComments(blogReadDocumentID:String){
+    fun getComments(
+        context: Context,
+        blogReadDocumentID: String,
+        listview: ListView,
+        enterCommentTextBox: EditText,
+        submitButton: Button
+    ) {
+        var commentsList: ArrayList<String> = arrayListOf()
+        var arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
+            context,
+            android.R.layout.simple_list_item_1, commentsList
+        )
 
+        // Set the initial adapter
+        listview.adapter = arrayAdapter
+
+        // Listen for real-time updates to the comments
         FirebaseFirestore.getInstance().collection("BlogsData").document(blogReadDocumentID)
-            .get()
-            .addOnSuccessListener {  }
+            .addSnapshotListener { documentSnapshot, e ->
+                if (e != null) {
+                    Log.w("commentsList", "Listen failed.", e)
+                    return@addSnapshotListener
+                }
 
+                if (documentSnapshot != null && documentSnapshot.exists()) {
+                    if (documentSnapshot.get("comments") != null) {
+                        commentsList.clear()
+                        commentsList.addAll(documentSnapshot.get("comments") as ArrayList<String>)
+
+                        // Notify the adapter that the data has changed so the list updates
+                        arrayAdapter.notifyDataSetChanged()
+
+                        Log.d("commentsList", "Number of comments: ${commentsList.size}")
+                        if (commentsList.isNotEmpty()) {
+                            Log.d("commentsList", commentsList[0])
+                        }
+                    }
+                } else {
+                    Log.d("commentsList", "Current data: null")
+                }
+            }
+
+        // Handle adding new comments
+        submitButton.setOnClickListener {
+            addComments(context, enterCommentTextBox, blogReadDocumentID, commentsList)
+        }
     }
 
 
+    fun addComments(
+        context: Context,
+        typedComment: EditText,
+        blogDocumentId: String,
+        allPreviousComments: ArrayList<String>
+    ) {
+        val comment: String = typedComment.text.toString()
+        allPreviousComments.add(comment)
+        Log.d("commentsList", typedComment.text.toString())
+
+        FirebaseFirestore.getInstance().collection("BlogsData").document(blogDocumentId)
+            .update("comments", allPreviousComments)
+            .addOnSuccessListener {
+                Toast.makeText(context, "Comment Done", Toast.LENGTH_LONG).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Some Issue Faced", Toast.LENGTH_LONG).show()
+
+            }
+
+    }
+
+    fun totalLiked(context: Context, blogDocumentId: String, totalLikesShow: TextView) {
+
+        FirebaseFirestore.getInstance().collection("BlogsData").document(blogDocumentId)
+            .get()
+            .addOnSuccessListener { document ->
+                val totalLikesOnBlog=document.getString("likes").toString()
+                totalLikesShow.text=totalLikesOnBlog
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Some Issue Faced", Toast.LENGTH_LONG).show()
+
+            }
+    }
 }
+
+
+
+
+//    fun blogLiked(context: Context, likedBy:String,){
+//
+//    }
+
+

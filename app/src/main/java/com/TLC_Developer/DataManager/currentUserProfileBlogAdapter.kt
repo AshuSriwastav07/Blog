@@ -33,6 +33,7 @@ import java.util.Locale
 class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass>) :
     RecyclerView.Adapter<currentUserProfileBlogAdapter.ViewHolder>() {
 
+
     // ViewHolder class to hold and recycle views
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val userProfileImage: ImageView = view.findViewById(R.id.currentUser_userProfile)

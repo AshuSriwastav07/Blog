@@ -12,7 +12,6 @@ class DataClass {
     var BlogDocumentID:String //document id where it set up
     var BlogUserName:String
 
-
     constructor(blogTitle:String,blogTags:String,blogBody:String,blogUserID:String,blogDateAndTime:String,blogImageURL:String,blogUserProfileUrl: String,blogDocumentID:String,BlogUserName:String)
     {
         this.BlogTitle=blogTitle

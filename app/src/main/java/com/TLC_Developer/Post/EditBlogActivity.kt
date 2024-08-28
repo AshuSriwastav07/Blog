@@ -33,7 +33,7 @@ class EditBlogActivity : AppCompatActivity() {
         binding = ActivityEditBlogBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize FirebaseFirestore
+        // Initialize FirebaseFireStore
         firebaseFirestore = FirebaseFirestore.getInstance()
 
         // Bind views to variables

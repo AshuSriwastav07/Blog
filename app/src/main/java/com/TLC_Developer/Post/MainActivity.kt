@@ -74,7 +74,6 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     override fun onStart() {
         super.onStart()
         // Initialize and set up the RecyclerView for displaying blog posts

@@ -25,7 +25,6 @@ class SetupProfilePageActivity : AppCompatActivity() {
     private lateinit var saveProfileButton: Button
 
     //Pre-filed data and no Empty
-
     private lateinit var lastUserName:String
     private lateinit var lastInstagramLink:String
     private lateinit var lastFBLink:String

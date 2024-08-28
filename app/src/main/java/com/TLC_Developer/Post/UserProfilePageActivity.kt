@@ -72,10 +72,7 @@ class UserProfilePageActivity : AppCompatActivity() {
             val intent =Intent(this,SetupProfilePageActivity::class.java)
             startActivity(intent)
         }
-
-
     }
-
 
 
     // Function to load blog data from Firestore for the current user

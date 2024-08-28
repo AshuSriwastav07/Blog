@@ -81,6 +81,7 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
             functionsManager().openProfile(context,blog.BlogUserID)
         }
 
+
         //Open Blog for Reading
         viewHolder.blogTitle.setOnClickListener{
             readBlog(context,dataForReadingBlog)
