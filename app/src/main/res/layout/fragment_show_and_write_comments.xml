@@ -15,19 +15,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_4"
-            android:text="@string/comment_here"
-            android:textSize="@dimen/dp_8" />
+            android:layout_marginVertical="@dimen/dp_4"
+            android:fontFamily="@font/alata"
+            android:text="@string/responses"
+            android:textSize="@dimen/dp_8"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/typeComment"
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/dp_4"
-            android:layout_marginTop="@dimen/dp_3"
-            android:layout_marginEnd="@dimen/dp_3"
-            android:ems="10"
-            android:hint="Comment"
-            android:inputType="text" />
+            android:layout_marginVertical="@dimen/dp_8"
+            app:cardCornerRadius="5dp"
+            app:cardElevation="6dp">
+
+            <EditText
+                android:id="@+id/typeComment"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@android:color/transparent"
+                android:ems="10"
+                android:hint="What are your thoughts?"
+                android:inputType="text"
+                android:paddingStart="5dp"
+                android:paddingEnd="0dp" />
+        </androidx.cardview.widget.CardView>
 
         <Button
             android:id="@+id/submitComment"
@@ -35,7 +47,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginHorizontal="@dimen/dp_4"
-            android:backgroundTint="#B8B4B4"
+            android:backgroundTint="#95DBE2"
+            android:fontFamily="@font/merriweather_light"
             android:text="Submit"
             android:textColor="#000000" />
 
@@ -47,8 +60,11 @@
             android:layout_marginHorizontal="@dimen/dp_4"
             android:layout_marginTop="@dimen/dp_3"
             android:layout_marginEnd="0dp"
-            android:dividerHeight="3dp"
-            android:paddingTop="10dp" />
+            android:divider="@color/black"
+            android:dividerHeight="1dp"
+            android:paddingHorizontal="@dimen/dp_4"
+            android:paddingTop="10dp"
+            android:scrollbars="none" />
 
     </LinearLayout>
 </FrameLayout>

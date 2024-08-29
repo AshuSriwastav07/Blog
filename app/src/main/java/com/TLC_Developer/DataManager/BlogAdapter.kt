@@ -9,11 +9,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.TLC_Developer.Post.R
 import com.TLC_Developer.Post.readBlogPageActivity
 import com.TLC_Developer.functions.functionsManager
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -47,9 +50,14 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Get the blog data for the current position
         val blog = blogDataSet[position]
+
+        val currentLoginUserId=FirebaseAuth.getInstance().currentUser?.email.toString()
+        val currentLoginUserGoogleName=FirebaseAuth.getInstance().currentUser?.displayName.toString()
+
         // Set the blog title and writer's name
         viewHolder.blogTitle.text = blog.BlogTitle
 
+        //add data to send in next activity reading
         val dataForReadingBlog:ArrayList<String> = arrayListOf(
             blog.BlogTitle,
             blog.BlogDateAndTime,
@@ -58,11 +66,19 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
             blog.BlogUserProfileUrl,
             blog.BlogUserName,
             blog.BlogDocumentID,
-            blog.BlogUserID
+            blog.BlogUserID,
         )
 
+        FirebaseFirestore.getInstance().collection("usersDetails").document(currentLoginUserId)
+            .get()
+            .addOnSuccessListener { document ->
+                    dataForReadingBlog.add(document.getString("userName").toString())
+            }.addOnFailureListener {
+                dataForReadingBlog.add(currentLoginUserGoogleName)
+            }
         //get and Set User name for each Item
-            viewHolder.userName.text=blog.BlogUserName
+
+        viewHolder.userName.text=blog.BlogUserName
 
 
         viewHolder.blogTags.text = blog.BlogTags
@@ -72,7 +88,7 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
         stringToDate(blog.BlogDateAndTime, viewHolder)
 
         // Load the blog's background image and user's profile image using Picasso
-        functionsManager().loadBlogImagesImage(blog.BlogImageURL,viewHolder.blogBgImageView)
+        functionsManager().loadBlogBGImages(blog.BlogImageURL,viewHolder.blogBgImageView)
 
         //load Profile Image
         functionsManager().loadProfileImagesImage(blog.BlogUserProfileUrl,viewHolder.userProfileImage)

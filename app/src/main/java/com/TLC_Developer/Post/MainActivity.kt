@@ -82,7 +82,7 @@ class MainActivity : AppCompatActivity() {
 
 
         // Create an adapter for the RecyclerView
-        recyclerViewAdapter = BlogAdapter(BlogDataSet,this)
+        recyclerViewAdapter = BlogAdapter(BlogDataSet,this,)
         blogRecyclerView.apply {
             setHasFixedSize(true) // Optimize RecyclerView performance
             layoutManager = viewManager
@@ -134,6 +134,8 @@ class MainActivity : AppCompatActivity() {
         makeDefaultProfile()
     }
 
+
+    //it will create default profile for user when in login 1st time
     fun makeDefaultProfile(){
         val firebaseFireStore = FirebaseFirestore.getInstance()
         val auth = FirebaseAuth.getInstance()

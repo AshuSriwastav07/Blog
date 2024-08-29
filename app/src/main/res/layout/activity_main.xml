@@ -89,17 +89,6 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:id="@+id/homeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/dp_2"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/app_navigation_buttons"
-                android:elevation="@dimen/dp_3"
-                android:src="@drawable/baseline_home_24" />
-
-            <ImageButton
                 android:id="@+id/writeBlogButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

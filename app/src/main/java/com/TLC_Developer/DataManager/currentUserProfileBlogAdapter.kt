@@ -74,7 +74,7 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
         Log.d("profileImageData",blog.BlogUserProfileUrl)
 
         functionsManager().loadProfileImagesImage(blog.BlogUserProfileUrl,viewHolder.userProfileImage)
-        functionsManager().loadBlogImagesImage(blog.BlogImageURL,viewHolder.BGImage)
+        functionsManager().loadBlogBGImages(blog.BlogImageURL,viewHolder.BGImage)
 
         // if current user is on profile or other user
         val user = Firebase.auth.currentUser
@@ -85,7 +85,9 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
             blog.BlogImageURL,
             blog.BlogBody,
             blog.BlogUserProfileUrl,
-            blog.BlogUserName
+            blog.BlogUserName,
+            blog.BlogDocumentID,
+            blog.BlogUserID
 
         )
 

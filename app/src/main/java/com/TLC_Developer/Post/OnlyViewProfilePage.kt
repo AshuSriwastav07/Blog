@@ -40,12 +40,6 @@ class OnlyViewProfilePage : AppCompatActivity() {
 
         val profileImageImageView: ImageView = findViewById(R.id.ViewProfilePageProfileImage)
 
-        /*       functionCalls.getAndSetUserDetails(db,openedUserProfileID,userName,profileImageImageView)
-        functionCalls.socialMediaLinks(this,db,openedUserProfileID,instagramButton,FBButton,XButton,YTButton)
-//        Log.d("FireaseuserID",openedUserProfileID)*/
-
-        //call function to show data in upper profile
-
         functionCalls.showDataInOnlyViewProfile(this,showUserProfileData,profileImageImageView,userName,instagramButton,YTButton,XButton,FBButton)
 
     }

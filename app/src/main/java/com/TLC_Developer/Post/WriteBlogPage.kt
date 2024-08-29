@@ -55,6 +55,10 @@ class WriteBlogPage : AppCompatActivity() {
         val progressBar = findViewById<ProgressBar>(R.id.BlogWriteprogressBar)
         BGImageUrl = findViewById(R.id.EnterBGImageUrl)
 
+        //empty Array
+
+        val commentAndLikesArray:ArrayList<String> = arrayListOf()
+
         // Set up the publish button to trigger blog publishing
         binding.publishBlogButton.setOnClickListener {
             progressBar.visibility = View.VISIBLE
@@ -72,7 +76,9 @@ class WriteBlogPage : AppCompatActivity() {
                 "userID" to userID,
                 "BlogDateAndTime" to currentDate,
                 "BlogUserProfileUrl" to profilePictureUrl,
-                "userName" to blogWriterName
+                "userName" to blogWriterName,
+                "comments" to commentAndLikesArray,
+                "likedBy" to commentAndLikesArray
             )
 
             // Call the function to upload the blog data

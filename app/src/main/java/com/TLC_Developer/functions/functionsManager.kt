@@ -28,23 +28,29 @@ import java.util.Date
 import java.util.Locale
 
 class functionsManager {
+
+    // Initialize Firebase authentication to get current user's information
     private val firebaseAuthentication = FirebaseAuth.getInstance()
+
+    // Get the current user's email, which is used as their ID in the database
     private val currentUserID =
-        firebaseAuthentication.currentUser?.email.toString()  //in Data Collections email is set as user id
+        firebaseAuthentication.currentUser?.email.toString()  // In data collections, email is set as user ID
 
-
+    // Function to open the profile page
     fun openProfile(context: Context, profileUserID: String) {
+        // If the current user is viewing their own profile, open their full profile page
         if (currentUserID == profileUserID) {
             val intent = Intent(context, UserProfilePageActivity::class.java)
             context.startActivity(intent)
         } else {
+            // If the user is viewing someone else's profile, open a different page for that
             val intent = Intent(context, OnlyViewProfilePage::class.java)
             intent.putExtra("OpenedProfileUserId", profileUserID)
             context.startActivity(intent)
         }
-
     }
 
+    // Function to display a user's data on their profile page
     fun showDataInOnlyViewProfile(
         context: Context,
         userDocumentID: String,
@@ -55,33 +61,36 @@ class functionsManager {
         openX: ImageButton,
         openFacebook: ImageButton
     ) {
-        val db = Firebase.firestore
-        val docRef = db.collection("usersDetails").document(userDocumentID)
+        val db = Firebase.firestore // Access Firestore database
+        val docRef = db.collection("usersDetails").document(userDocumentID) // Get the user's document
+
+        // Get the user's data from Firestore
         docRef.get()
             .addOnSuccessListener { document ->
-                val userName = document.getString("userName")
+                val userName = document.getString("userName") // Get the user's name
 
+                // If the user has not set up their profile, prompt them to complete it
                 if (userName.isNullOrEmpty()) {
-                    // If userName is null or empty, prompt to complete profile
                     ManageSignUpAndProfile().checkUserProfileIsComplete(context)
                 } else {
-                    // If userName is not empty, set the text
+                    // If the user has a name, display it
                     userProfileName.text = userName
                 }
 
-                val profileUrl = document.getString("UserprofileUrl")
-
-                loadProfileImagesImage(profileUrl.toString(), userProfileImage)
+                val profileUrl = document.getString("UserprofileUrl") // Get the profile image URL
+                loadProfileImagesImage(profileUrl.toString(), userProfileImage) // Load and display the image
             }
             .addOnFailureListener { exception ->
-                Log.d("functionManagerLogs-showDataInOnlyViewProfile", exception.toString())
+                Log.d("functionManagerLogs-showDataInOnlyViewProfile", exception.toString()) // Log any errors
             }
 
+        // Get more user details from Firestore
         db.collection("usersDetails")
             .document(userDocumentID)
             .get()
             .addOnSuccessListener { document ->
 
+                // Check if the user has links for social media, if not hide the buttons
                 if (document.getString("InstagramLink").toString() == "") {
                     openInstagram.visibility = View.GONE
                 }
@@ -95,6 +104,7 @@ class functionsManager {
                     openYoutube.visibility = View.GONE
                 }
 
+                // Set click actions for social media buttons
                 openInstagram.setOnClickListener {
                     openSocialMedia(
                         document.getString("InstagramLink").toString(), context
@@ -116,81 +126,83 @@ class functionsManager {
                         document.getString("YoutubeLink").toString(), context
                     )
                 }
-
-
             }
-
     }
 
-    // Convert String to Date
+    // Function to convert a date from a string format to a Date object
     fun convertStringToDate(dateString: String): Date? {
         return try {
-            val format = SimpleDateFormat("dd/M/yyyy HH:mm", Locale.getDefault())
-            format.parse(dateString)
+            val format = SimpleDateFormat("dd/M/yyyy HH:mm", Locale.getDefault()) // Set date format
+            format.parse(dateString) // Convert string to Date
         } catch (e: ParseException) {
             e.printStackTrace()
             null
         }
     }
 
+    // Function to open a social media link in a web browser
     private fun openSocialMedia(link: String, context: Context) {
-        if (link != "") {
+        // Check if the link is valid and for a supported social media site
+        if (link != "" && link.contains("https://x.com/") || link.contains("https://www.instagram.com/") || link.contains("https://www.facebook.com/") || link.contains("https://www.youtube.com/")) {
             val urlIntent = Intent(
                 Intent.ACTION_VIEW,
-                Uri.parse(link)
+                Uri.parse(link) // Create an intent to open the link
             )
-            context.startActivity(urlIntent)
+            context.startActivity(urlIntent) // Start the intent to open the link
         } else {
+            // If the link is not valid, show a message
             Toast.makeText(context, "Not Available", Toast.LENGTH_LONG).show()
-
         }
     }
 
+    // Function to load and display a profile image using Picasso
     fun loadProfileImagesImage(imageUrl: String, imageView: ImageView) {
         Picasso.get()
-            .load(imageUrl) // Use default image if URL is null
-            .placeholder(R.mipmap.profileicon) // Placeholder image while loading
-            .error(R.mipmap.profileicon) // Error image if loading fails
-            .into(imageView)
+            .load(imageUrl) // Load the image from the URL
+            .placeholder(R.mipmap.profileicon) // Show this image while the main image is loading
+            .error(R.mipmap.profileicon) // Show this image if there's an error loading the main image
+            .into(imageView) // Display the image in the ImageView
     }
 
-    fun loadBlogImagesImage(imageUrl: String, imageView: ImageView) {
+    // Function to load and display a background image for a blog
+    fun loadBlogBGImages(imageUrl: String, imageView: ImageView) {
         Picasso.get()
-            .load(imageUrl) // Use default image if URL is null
-            .placeholder(R.mipmap.noimage) // Placeholder image while loading
-            .error(R.mipmap.noimage) // Error image if loading fails
-            .into(imageView)
+            .load(imageUrl) // Load the image from the URL
+            .placeholder(R.mipmap.noimage) // Show this image while the main image is loading
+            .error(R.mipmap.noimage) // Show this image if there's an error loading the main image
+            .into(imageView) // Display the image in the ImageView
     }
 
+    // Function to get and display comments on a blog
     fun getComments(
         context: Context,
         blogReadDocumentID: String,
         listview: ListView,
         enterCommentTextBox: EditText,
         submitButton: Button,
-        userName:String
+        userName: String
     ) {
-        val commentsList: ArrayList<String> = arrayListOf()
+        val commentsList: ArrayList<String> = arrayListOf() // Create a list to store comments
         val arrayAdapter: ArrayAdapter<String> = ArrayAdapter(
             context,
             android.R.layout.simple_list_item_1, commentsList
         )
 
-        // Set the initial adapter
+        // Set the adapter for the ListView to display comments
         listview.adapter = arrayAdapter
 
-        // Listen for real-time updates to the comments
+        // Listen for real-time updates to the comments in Firestore
         FirebaseFirestore.getInstance().collection("BlogsData").document(blogReadDocumentID)
             .addSnapshotListener { documentSnapshot, e ->
                 if (e != null) {
-                    Log.w("commentsList", "Listen failed.", e)
+                    Log.w("commentsList", "Listen failed.", e) // Log any errors
                     return@addSnapshotListener
                 }
 
                 if (documentSnapshot != null && documentSnapshot.exists()) {
                     if (documentSnapshot.get("comments") != null) {
-                        commentsList.clear()
-                        commentsList.addAll(documentSnapshot.get("comments") as ArrayList<String>)
+                        commentsList.clear() // Clear the old list of comments
+                        commentsList.addAll(documentSnapshot.get("comments") as ArrayList<String>) // Add the new comments
 
                         // Notify the adapter that the data has changed so the list updates
                         arrayAdapter.notifyDataSetChanged()
@@ -201,80 +213,36 @@ class functionsManager {
                         }
                     }
                 } else {
-                    Log.d("commentsList", "Current data: null")
+                    Log.d("commentsList", "Current data: null") // Log if no data is found
                 }
             }
 
-        // Handle adding new comments
+        // Handle the event when the submit button is clicked to add a new comment
         submitButton.setOnClickListener {
-            addComments(context, enterCommentTextBox, blogReadDocumentID, commentsList,userName)
+            addComments(context, enterCommentTextBox, blogReadDocumentID, commentsList, userName)
         }
     }
 
-
+    // Function to add a new comment to a blog
     fun addComments(
         context: Context,
         typedComment: EditText,
         blogDocumentId: String,
         allPreviousComments: ArrayList<String>,
-        commentUserName:String
+        commentUserName: String
     ) {
-        val comment: String = typedComment.text.toString()
-        allPreviousComments.add("$comment by $commentUserName")
+        val comment: String = typedComment.text.toString() // Get the comment text
+        allPreviousComments.add("$comment by $commentUserName") // Add the comment with the username to the list
         Log.d("commentsList", typedComment.text.toString())
 
+        // Update Firestore with the new comment
         FirebaseFirestore.getInstance().collection("BlogsData").document(blogDocumentId)
             .update("comments", FieldValue.arrayUnion("$comment by $commentUserName"))
             .addOnSuccessListener {
-                Toast.makeText(context, "Comment Done", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, "Comment Done", Toast.LENGTH_LONG).show() // Show a success message
             }
             .addOnFailureListener { e ->
-                Toast.makeText(context, "Some Issue Faced", Toast.LENGTH_LONG).show()
-
+                Toast.makeText(context, "Some Issue Faced", Toast.LENGTH_LONG).show() // Show an error message
             }
-
     }
-
-    fun countCommentAndLikes(context: Context, blogDocumentId: String, totalLikesShow: TextView,totalComments:TextView) {
-        val commentList: ArrayList<String> = arrayListOf()
-        val likesList: ArrayList<String> = arrayListOf()
-
-        FirebaseFirestore.getInstance().collection("BlogsData").document(blogDocumentId)
-            .addSnapshotListener { document, e ->
-                if (e != null) {
-                    Log.w("commentsList", "Listen failed.", e)
-                    return@addSnapshotListener
-                }
-
-                commentList.clear()
-                likesList.clear()
-
-                commentList.addAll(document?.get("comments") as ArrayList<String>)
-                likesList.addAll(document.get("likedBy") as ArrayList<String>)
-
-                totalLikesShow.text=likesList.size.toString()
-                totalComments.text=commentList.size.toString()
-
-            }
-
-    }
-
-    fun likeTheBlogAndLikedBy(context: Context,blogDocumentId:String,userID:String,likeImageButton: ImageButton){
-
-        FirebaseFirestore.getInstance().collection("BlogsData").document(blogDocumentId)
-            .update("likedBy", FieldValue.arrayUnion(userID))
-            .addOnSuccessListener {
-                Toast.makeText(context, "Post Liked", Toast.LENGTH_LONG).show()
-                likeImageButton.setImageResource(R.mipmap.liked)
-            }
-            .addOnFailureListener { e ->
-                Toast.makeText(context, "Some Issue Faced", Toast.LENGTH_LONG).show()
-
-            }
-
-    }
-
 }
-
-
-

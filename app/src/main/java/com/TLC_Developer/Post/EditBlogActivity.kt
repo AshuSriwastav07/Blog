@@ -61,7 +61,7 @@ class EditBlogActivity : AppCompatActivity() {
                     bodyTextview.setText(document.getString("body"))
                     tagsTextview.setText(document.getString("tags"))
                     // Load the existing image using Picasso
-                    functionsManager().loadBlogImagesImage(document.getString("BlogImageURL").toString(),imageViewForBG)
+                    functionsManager().loadBlogBGImages(document.getString("BlogImageURL").toString(),imageViewForBG)
 
                 } else {
                     Log.d(TAG, "No such document")
