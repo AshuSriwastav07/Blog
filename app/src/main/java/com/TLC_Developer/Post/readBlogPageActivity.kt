@@ -3,7 +3,6 @@ package com.TLC_Developer.Post
 import android.os.Bundle
 import android.text.Html
 import android.util.Log
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.TLC_Developer.Post.databinding.ActivityReadBlogPageBinding
 import com.TLC_Developer.functions.functionsManager
@@ -42,9 +41,9 @@ class readBlogPageActivity : AppCompatActivity() {
             val blogWriterName=blogData[5]
             val blogDocumentID=blogData[6]
             val currentLoginUserName=blogData[8]
+            Log.d("readBlog",currentLoginUserName)
             val currentUserEmailAsUserID=FirebaseAuth.getInstance().currentUser?.email.toString()
 
-            //get UserName
 
 
             //make ArrayList to store comments and liked users data
@@ -53,6 +52,12 @@ class readBlogPageActivity : AppCompatActivity() {
 
             //Firestore reference
             val blogDocumentRef = FirebaseFirestore.getInstance().collection("BlogsData").document(blogDocumentID)
+
+            var blogWriterUserID =""
+
+            blogDocumentRef.get().addOnSuccessListener { document ->
+                blogWriterUserID=document.getString("userID").toString()
+            }
 
            blogDocumentRef  //check and update data in real time in app using Snapshot Listener
                .addSnapshotListener { document, e ->
@@ -91,6 +96,12 @@ class readBlogPageActivity : AppCompatActivity() {
                    binding.countComments.text=commentsList.size.toString()
                 }
 
+            //Open Blog Writer User Profile User
+            binding.readBlogUserProfileImage.setOnClickListener{
+//                Toast.makeText(this, blogWriterUserID,Toast.LENGTH_LONG).show()
+                functionsManager().openProfile(this, blogWriterUserID.toString())
+            }
+
 
             //set all the other blog body data in reading page
             binding.BlogReadingTitle.text= blogTitle
@@ -110,7 +121,7 @@ class readBlogPageActivity : AppCompatActivity() {
                 // Pass the blog ID to the fragment
                 val bundle = Bundle()
                 bundle.putString("blogId", blogDocumentID)
-                bundle.putString("commentByUserName", currentLoginUserName)
+                bundle.putString("commentByUserName", blogData[8])
                 commentsFragment.arguments = bundle
 
                 commentsFragment.show(supportFragmentManager, "CommentsFragment")

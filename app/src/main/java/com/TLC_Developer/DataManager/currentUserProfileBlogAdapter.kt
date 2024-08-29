@@ -71,7 +71,7 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
         stringToDate(blog.BlogDateAndTime, viewHolder)
 
         // Load the user's profile image using Picasso
-        Log.d("profileImageData",blog.BlogUserProfileUrl)
+//        Log.d("profileImageData",blog.BlogUserProfileUrl)
 
         functionsManager().loadProfileImagesImage(blog.BlogUserProfileUrl,viewHolder.userProfileImage)
         functionsManager().loadBlogBGImages(blog.BlogImageURL,viewHolder.BGImage)
