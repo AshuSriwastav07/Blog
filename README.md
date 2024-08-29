@@ -10,6 +10,10 @@ Post is a lightweight, fast, and efficient Android application designed for seam
 
 - **Profile Management:** Manage your user profile with ease. update your username, and view all your published blogs in one place, Edit your Blogs.
 
+- **Like and Comments:** Users can like the blog and write comments on it.
+
+- **Share Their Social Media Handels here:** Blog Write can share their social media account on their profile and others can connect with them.
+
 - **Real-Time Updates:** Stay up-to-date with real-time data synchronization powered by Firebase Firestore. Any changes in blogs or user data are instantly reflected across all devices.
 
 - **Optimized for Low-End Devices:** Post is built with performance in mind, making it an excellent choice for users with low-end devices. The application is optimized to minimize resource usage while maintaining a high level of functionality.
@@ -28,10 +32,12 @@ Post is a lightweight, fast, and efficient Android application designed for seam
 - **RecyclerView:** Efficiently manages the display of blogs in a scrolling list with the help of RecyclerView, providing a smooth scrolling experience even with large datasets.
 
 - **Kotlin:** The app is built using Kotlin, leveraging modern Android development best practices.
+- 
 ## Prerequisites
 
 - Android Studio installed on your computer.
 - A Firebase project set up with Firebase Authentication and Firestore enabled.
+
 ## Open the project in Android Studio:
 - Open Android Studio.
 - Select Open an existing project.
