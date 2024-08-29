@@ -131,19 +131,19 @@ dependencies {
 
 # Post Use
 ## 1 Write Blog 
-click on Write Blog Button in the middle, and Enter Blog Detials like Title, Select Image or paste image URL, Enter Blog body, Enter some of tags related to your Blog. At end click on Publish Button.
+click on the Write Blog Button in the middle, and Enter Blog details like Title, Select the Image or paste the image URL, Enter the Blog body, and Enter some of the tags related to your Blog. At the end click on the Publish Button.
 
 ## 2 Read Blog 
-Read any blog showing on Home Page.
+Read any blog showing on the Home Page or other user profiles. 
 
 ## 3 Edit Blog
-GO to your Profile Select blogs you want to edit, click on right arrow at roght-top corrner and enter blog details you want to update. at end click on update Button.
+Go to your Profile Select the blogs you want to edit, click on the right arrow at the right-top corner, and enter the blog details you want to update. at the end click on the Update Button.
 
 ## 4 Edit Profile details
-Go to Profile section click profile edit button and then update your Name or Enter your social media link you want to add and save the profile.
+Go to the Profile section click the Profile edit button and then update your Name or Enter the social media link you want to add and save the profile.
 
 ## 5 Check other User Profile
-Select blog from home page you want to check user profile, click on user image in blog and you will be redirect to user Profile, you can connect with user using their social media profile.
+Select the blog from the home page where you want to check the user profile, click on the user image in the blog and you will be redirected to the user Profile, you can connect with the user using their social media profile.
 
 
 ## Connect US: 🔗
