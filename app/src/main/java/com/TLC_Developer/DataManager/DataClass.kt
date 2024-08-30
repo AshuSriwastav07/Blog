@@ -25,5 +25,4 @@ class DataClass {
         this.BlogUserName=BlogUserName
 
     }
-
 }

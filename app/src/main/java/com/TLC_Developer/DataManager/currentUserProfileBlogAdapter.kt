@@ -91,8 +91,6 @@ class currentUserProfileBlogAdapter(private var blogDataSet: ArrayList<DataClass
 
         )
 
-
-
         //show buttons on ling click
         viewHolder.completeLayout.setOnLongClickListener{
             if(user?.email.toString()==blog.BlogUserID) {

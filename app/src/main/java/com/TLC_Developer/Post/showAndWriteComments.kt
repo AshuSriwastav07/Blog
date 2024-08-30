@@ -18,7 +18,7 @@ class showAndWriteComments : DialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment (create the view hierarchy from the XML layout)
         val view: View = inflater.inflate(R.layout.fragment_show_and_write_comments, container, false)
 

@@ -18,6 +18,7 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
@@ -80,6 +81,13 @@ class SignupAndLoginPage : AppCompatActivity() {
         // Initialize the text animation (typewriter effect)
         typewriterTextView = findViewById(R.id.typewriterTextView)
         startTextAnimation()
+
+
+
+        //Sign in Using Email and Password
+
+        binding.loginUsingEmail.setOnClickListener { registerOrLoginUser() }
+
     }
 
     // Function to start the text animation (typewriter effect)
@@ -171,9 +179,69 @@ class SignupAndLoginPage : AppCompatActivity() {
             }
         }
 
+//Email login and account create
+    private fun registerOrLoginUser() {
+        val userEmail = binding.LoginEmailId.text.toString().trim()
+        val userPassword = binding.LoginPassword.text.toString().trim()
+
+        if (userEmail.isNotEmpty() && userPassword.isNotEmpty()) {
+            auth.signInWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener { signInTask ->
+                    if (signInTask.isSuccessful) {
+                        val firebaseUser = auth.currentUser
+                        firebaseUser?.reload()?.addOnCompleteListener { reloadTask ->
+                            if (reloadTask.isSuccessful && firebaseUser.isEmailVerified) {
+                                // Email is verified, allow user to proceed
+                                Toast.makeText(this, "Login successful", Toast.LENGTH_LONG).show()
+                                startActivity(Intent(this, MainActivity::class.java))
+                                finish()
+                            } else {
+                                // Email is not verified, ask the user to verify it
+                                Toast.makeText(this, "Please verify your email first", Toast.LENGTH_LONG).show()
+                                sendEmailVerification()
+                                auth.signOut() // Log the user out since email is not verified
+                            }
+                        }
+                    } else {
+                        // User doesn't exist or wrong credentials, try to create a new account
+                        auth.createUserWithEmailAndPassword(userEmail, userPassword)
+                            .addOnCompleteListener { createTask ->
+                                if (createTask.isSuccessful) {
+                                    Toast.makeText(this, "Account created. Please verify your email.", Toast.LENGTH_LONG).show()
+                                    sendEmailVerification()
+                                    auth.signOut() // Log the user out to ensure they verify email
+                                } else {
+                                    // Handle account creation error
+                                    Toast.makeText(this, "Error: ${createTask.exception?.message}", Toast.LENGTH_LONG).show()
+                                }
+                            }
+                    }
+                }
+        } else {
+            Toast.makeText(this, "Please enter email and password", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun sendEmailVerification() {
+        val firebaseUser = FirebaseAuth.getInstance().currentUser
+        firebaseUser?.let { user ->
+            user.sendEmailVerification().addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    Toast.makeText(this, "Verification email sent to ${user.email}", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Failed to send verification email", Toast.LENGTH_LONG).show()
+                }
+            }
+        } ?: run {
+            Toast.makeText(this, "User is not logged in", Toast.LENGTH_LONG).show()
+        }
+    }
+
+
+
+
     override fun onStart() {
         super.onStart()
-
         // Check if the user is already signed in
         val currentUser = auth.currentUser
         if (currentUser != null) {

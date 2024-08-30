@@ -178,3 +178,4 @@ class EditBlogActivity : AppCompatActivity() {
         binding.BlogWriteprogressBar.visibility = View.GONE
     }
 }
+

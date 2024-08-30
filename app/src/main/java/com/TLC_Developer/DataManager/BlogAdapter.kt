@@ -138,12 +138,10 @@ class BlogAdapter(private var blogDataSet: ArrayList<DataClass>,private var cont
         }
     }
 
-
     fun readBlog(context: Context,blogReadingData:ArrayList<String>){
         val intent = Intent(context,readBlogPageActivity::class.java)
         intent.putStringArrayListExtra("blogData",blogReadingData)
         context.startActivity(intent)
     }
-
 
 }

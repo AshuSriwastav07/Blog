@@ -40,7 +40,18 @@ class readBlogPageActivity : AppCompatActivity() {
             val blogUserProfileImageUrl=blogData[4]
             val blogWriterName=blogData[5]
             val blogDocumentID=blogData[6]
-            val currentLoginUserName=blogData[8]
+                var currentLoginUserName=""
+
+                FirebaseFirestore.getInstance().collection("usersDetails").document(blogData[7])
+                    .get().addOnSuccessListener { data ->
+                        currentLoginUserName=data.getString("userName").toString()
+
+                        if(currentLoginUserName=="" || currentLoginUserName==null){
+                            return@addOnSuccessListener
+                        }
+                    }.addOnFailureListener{
+
+                    }
             Log.d("readBlog",currentLoginUserName)
             val currentUserEmailAsUserID=FirebaseAuth.getInstance().currentUser?.email.toString()
 
@@ -98,7 +109,6 @@ class readBlogPageActivity : AppCompatActivity() {
 
             //Open Blog Writer User Profile User
             binding.readBlogUserProfileImage.setOnClickListener{
-//                Toast.makeText(this, blogWriterUserID,Toast.LENGTH_LONG).show()
                 functionsManager().openProfile(this, blogWriterUserID.toString())
             }
 
@@ -121,7 +131,7 @@ class readBlogPageActivity : AppCompatActivity() {
                 // Pass the blog ID to the fragment
                 val bundle = Bundle()
                 bundle.putString("blogId", blogDocumentID)
-                bundle.putString("commentByUserName", blogData[8])
+                bundle.putString("commentByUserName", currentLoginUserName)
                 commentsFragment.arguments = bundle
 
                 commentsFragment.show(supportFragmentManager, "CommentsFragment")

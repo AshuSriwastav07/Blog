@@ -56,7 +56,6 @@ class WriteBlogPage : AppCompatActivity() {
         BGImageUrl = findViewById(R.id.EnterBGImageUrl)
 
         //empty Array
-
         val commentAndLikesArray:ArrayList<String> = arrayListOf()
 
         // Set up the publish button to trigger blog publishing

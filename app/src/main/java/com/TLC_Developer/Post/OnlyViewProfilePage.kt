@@ -44,7 +44,6 @@ class OnlyViewProfilePage : AppCompatActivity() {
 
     }
 
-
     override fun onStart() {
         super.onStart()
         val openedUserProfileID=intent?.extras?.getString("OpenedProfileUserId").toString() //get Data
@@ -65,7 +64,6 @@ class OnlyViewProfilePage : AppCompatActivity() {
     }
 
     private fun userProfileBlogData(currentUserID:String) {
-//        Log.d("onlyViewProfileLogs", "Current User ID: $currentUserID")  // Log the current user ID
 
         db.collection("BlogsData")
             .whereEqualTo("userID", currentUserID) // Filter blogs by current user's ID

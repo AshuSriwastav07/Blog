@@ -50,8 +50,6 @@ class UserProfilePageActivity : AppCompatActivity() {
             adapter = recyclerViewAdapter // Set adapter for RecyclerView
         }
 
-
-
     }
 
     override fun onStart() {

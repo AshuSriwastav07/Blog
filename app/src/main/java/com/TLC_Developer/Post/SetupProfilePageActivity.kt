@@ -1,5 +1,6 @@
 package com.TLC_Developer.Post
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -31,6 +32,7 @@ class SetupProfilePageActivity : AppCompatActivity() {
     private lateinit var lastXLink:String
     private lateinit var lastYTLink:String
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setup_profile_page)

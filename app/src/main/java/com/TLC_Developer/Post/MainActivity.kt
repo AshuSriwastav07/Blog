@@ -116,7 +116,6 @@ class MainActivity : AppCompatActivity() {
                         )
                         BlogDataSet.add(dataModel) // Add the blog data to the ArrayList
                     }
-                    
 
                     // Sort the blogs by date in descending order
                     BlogDataSet.sortByDescending {
