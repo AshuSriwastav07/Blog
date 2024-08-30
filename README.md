@@ -155,6 +155,7 @@ Select the blog from the home page where you want to check the user profile, cli
 
 
 ## Connect US: 🔗
+* **Demo Video** https://www.youtube.com/watch?v=xeteuJzvPMI
 * **Play Store** https://play.google.com/store/apps/details?id=com.dusol.thelearnerscommunity
 * **Email** ashusriwastav58@gmail.com
 * **Instagram** https://www.instagram.com/the_learners_community_dusol/
