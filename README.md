@@ -145,6 +145,9 @@ Go to the Profile section click the Profile edit button and then update your Nam
 ## 5 Check other User Profile
 Select the blog from the home page where you want to check the user profile, click on the user image in the blog and you will be redirected to the user Profile, you can connect with the user using their social media profile.
 
+![Screenshot_20240830_162703](https://github.com/user-attachments/assets/7d96c924-a661-4c32-be20-9bf2ffd10d7e)
+
+
 
 ## Connect US: 🔗
 * **Play Store** https://play.google.com/store/apps/details?id=com.dusol.thelearnerscommunity
