@@ -152,6 +152,7 @@ Select the blog from the home page where you want to check the user profile, cli
 ![Screenshot_20240830_163124](https://github.com/user-attachments/assets/890d0462-d671-46dd-a055-5de8a7e376fe)
 ![Screenshot_20240830_163013](https://github.com/user-attachments/assets/6a4de963-7fc9-496f-ac59-9a0e71728981)
 ![Screenshot_20240830_163108](https://github.com/user-attachments/assets/35d94f72-98e6-404f-b0f3-aea03c6b1cbd)
+![Screenshot_20240830_163155](https://github.com/user-attachments/assets/507457d3-1971-4991-b881-98062656474e)
 
 
 ## Connect US: 🔗
