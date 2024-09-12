@@ -131,7 +131,7 @@ dependencies {
 
 # Post Use
 ## 1 Write Blog 
-click on the Write Blog Button in the middle, and Enter Blog details like Title, Select the Image or paste the image URL, Enter the Blog body, and Enter some of the tags related to your Blog. At the end click on the Publish Button.
+Click on the Write Blog button in the middle, and enter blog details like the title. Select the image or paste the image URL. Enter the blog body and some of the tags related to your blog. At the end click on the Publish Button.
 
 ## 2 Read Blog 
 Read any blog showing on the Home Page or other user profiles. 
@@ -158,5 +158,4 @@ Select the blog from the home page where you want to check the user profile, cli
 ## Connect US: 🔗
 * **Demo Video** https://www.youtube.com/watch?v=xeteuJzvPMI
 * **Email** ashusriwastav58@gmail.com
-* **Instagram** https://www.instagram.com/the_learners_community_dusol/
-* **YouTube Channel** https://www.youtube.com/@TheLearnersCommunityDUSOL
+* **Instagram** https://www.instagram.com/i_am_ashu_shrivastav/
