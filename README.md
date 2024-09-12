@@ -145,9 +145,18 @@ Go to the Profile section click the Profile edit button and then update your Nam
 ## 5 Check other User Profile
 Select the blog from the home page where you want to check the user profile, click on the user image in the blog and you will be redirected to the user Profile, you can connect with the user using their social media profile.
 
+![Screenshot_20240830_162703](https://github.com/user-attachments/assets/5e4a22d2-ef30-4e85-92b9-9b463ea6eae1)
+![Screenshot_20240830_162836](https://github.com/user-attachments/assets/61e182a1-c77d-4d0a-bb52-285c2355e842)
+![Screenshot_20240830_162937](https://github.com/user-attachments/assets/f08dceab-b0b1-412a-9a47-6bd4be02173c)
+![Screenshot_20240830_162945](https://github.com/user-attachments/assets/277d7e37-4ccd-4d32-97ce-2c4b288a4f4a)
+![Screenshot_20240830_163124](https://github.com/user-attachments/assets/890d0462-d671-46dd-a055-5de8a7e376fe)
+![Screenshot_20240830_163013](https://github.com/user-attachments/assets/6a4de963-7fc9-496f-ac59-9a0e71728981)
+![Screenshot_20240830_163108](https://github.com/user-attachments/assets/35d94f72-98e6-404f-b0f3-aea03c6b1cbd)
+![Screenshot_20240830_163155](https://github.com/user-attachments/assets/507457d3-1971-4991-b881-98062656474e)
+
 
 ## Connect US: 🔗
-* **Play Store** https://play.google.com/store/apps/details?id=com.dusol.thelearnerscommunity
+* **Demo Video** https://www.youtube.com/watch?v=xeteuJzvPMI
 * **Email** ashusriwastav58@gmail.com
 * **Instagram** https://www.instagram.com/the_learners_community_dusol/
 * **YouTube Channel** https://www.youtube.com/@TheLearnersCommunityDUSOL
