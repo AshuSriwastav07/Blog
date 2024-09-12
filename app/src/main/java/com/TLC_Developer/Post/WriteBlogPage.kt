@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.TLC_Developer.Post.databinding.ActivityWriteBlogPageBinding
+import com.TLC_Developer.functions.functionsManager
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -56,7 +57,11 @@ class WriteBlogPage : AppCompatActivity() {
         BGImageUrl = findViewById(R.id.EnterBGImageUrl)
 
         //empty Array
-        val commentAndLikesArray:ArrayList<String> = arrayListOf()
+        val commentAndLikesArray:ArrayList<String> = arrayListOf(
+
+        )
+
+
 
         // Set up the publish button to trigger blog publishing
         binding.publishBlogButton.setOnClickListener {
@@ -139,8 +144,14 @@ class WriteBlogPage : AppCompatActivity() {
         }
     }
 
-    // Function to upload the blog data to Firestore
+    // Function to upload the blog data to FireStore
     private fun uploadBlogToFirestore(blogData: HashMap<String, Any>) {
+        if(functionsManager().containsRestrictedWords(blogData["body"].toString())){
+            Toast.makeText(this,"Your blog contains content that violates our community guidelines.",Toast.LENGTH_LONG).show()
+            binding.BlogWriteprogressBar.visibility = View.GONE
+
+        }else{
+
         firebaseFirestore.collection("BlogsData")
             .add(blogData)
             .addOnCompleteListener { blogDataStatus ->
@@ -155,6 +166,7 @@ class WriteBlogPage : AppCompatActivity() {
             .addOnFailureListener {
                 showUploadFailure()
             }
+        }
     }
 
     // Function to clear UI elements after successful upload

@@ -245,5 +245,32 @@ class functionsManager {
                 Toast.makeText(context, "Some Issue Faced", Toast.LENGTH_LONG).show() // Show an error message
             }
     }
+
+    fun containsRestrictedWords(blogContent: String): Boolean {
+
+        val restrictedWords:ArrayList<String> = arrayListOf("racist", "sexist", "homophobic", "xenophobic", "transphobic", "ableist",
+            "kill", "harm", "injure", "assault", "attack",
+            "bully", "stalk", "harass", "cyberbully", "dox",
+            "slander", "libel", "defame", "smear",
+            "private", "personal", "confidential", "sensitive",
+            "riot", "insurrection", "rebellion", "uprising",
+            "child pornography", "child labor", "child abuse",
+            "drug", "hack", "fraud", "illegal", "criminal",
+            "fake news", "misinformation", "propaganda", "hoax",
+            "steal", "copy", "plagiarize", "infringe", "violate copyright", "vulgar", "offensive", "indecent", "disgusting", "repulsive",
+            "swear words", "curse words", "foul language",
+            "sexual", "erotic", "suggestive", "explicit", "raunchy",
+            "gory", "bloody", "brutal", "violent", "gruesome",
+            "insults", "name-calling", "ad hominem",
+            "spam", "junk", "unsolicited", "irrelevant", "promotional")
+
+        for (word in restrictedWords) {
+            if (blogContent.contains(word, ignoreCase = true)) {
+                return true // If any restricted word is found, return true
+            }
+        }
+        return false // No restricted words found
+    }
+
 }
 
